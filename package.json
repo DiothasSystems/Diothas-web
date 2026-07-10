@@ -1,0 +1,19 @@
+{
+  "name": "diothas-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Diothas Systems, LLC — static site generator for Perspectives and The Workshop",
+  "scripts": {
+    "build": "node build.js",
+    "preview": "node build.js && node server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "fast-xml-parser": "^4.5.0",
+    "js-yaml": "^4.1.0",
+    "markdown-it": "^14.1.0"
+  },
+  "devDependencies": {
+    "express": "^4.21.2"
+  }
+}

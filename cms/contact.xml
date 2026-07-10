@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ============================================================
+     Diothas Systems CMS — CONTACT
+     Replaces the newsletter subscribe band from the earlier design.
+     No form, no provider, no list to maintain — just an address.
+     ============================================================ -->
+<section id="contact">
+  <field key="kicker">CORRESPONDENCE</field>
+  <field key="heading">Questions, ideas, or an impossible machine to build?</field>
+  <field key="email">admin@diothassystems.com</field>
+</section>

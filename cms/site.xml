@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ============================================================
+     Diothas Systems CMS — GLOBAL / NAV
+     Edit any value below. <field> = text, <link> = clickable link
+     (the text inside the tag is the label, href="" is the target),
+     <image> = a graphic (src="" path, alt="" description).
+     ============================================================ -->
+<section id="site">
+  <image key="logo" src="uploads/DiothasIcon.png" alt="Diothas Systems"/>
+  <field key="brandName">Diothas Systems</field>
+  <field key="brandTagline">PRODUCT · TECHNOLOGY · LEADERSHIP</field>
+
+  <!-- Used for canonical URLs, Open Graph tags, and sitemap.xml -->
+  <field key="baseUrl">https://diothassystems.com</field>
+
+  <!-- Top navigation links. A href starting with # points at a section of
+       the home page and is rewritten automatically on inner pages. -->
+  <list key="nav">
+    <item><link key="link" href="#writing">Writing</link></item>
+    <item><link key="link" href="#work">The Workshop</link></item>
+    <item><link key="link" href="#about">About</link></item>
+  </list>
+
+  <!-- Primary nav button -->
+  <link key="cta" href="mailto:admin@diothassystems.com">Contact</link>
+  <field key="contactEmail">admin@diothassystems.com</field>
+</section>

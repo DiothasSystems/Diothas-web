@@ -1,0 +1,47 @@
+name: Build and deploy to Hostinger
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Never let two deploys race each other onto the same FTP account.
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci
+
+      # build.js exits non-zero on invalid front matter, an impossible date,
+      # an unknown status, or a missing image. A failed build never deploys.
+      - name: Build
+        run: npm run build
+
+      # Pull requests stop here: the build is the test.
+      - name: Deploy via FTPS
+        if: github.event_name != 'pull_request'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          local-dir: ./dist/
+          server-dir: ${{ vars.FTP_REMOTE_DIR || '/public_html/' }}
+          # Incremental. The action keeps a manifest on the server and uploads
+          # only what changed. Never enable dangerous-clean-slate here.
+          dangerous-clean-slate: false

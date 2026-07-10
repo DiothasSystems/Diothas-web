@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ============================================================
+     Diothas Systems CMS — FOOTER
+     'columns' are the link groups. Each column has a heading and a
+     nested list of links. Add/remove columns or links freely.
+
+     A href starting with # points at a section of the home page and is
+     rewritten automatically on inner pages.
+     ============================================================ -->
+<section id="footer">
+  <image key="logo" src="uploads/DiothasIcon.png" alt=""/>
+  <field key="brandName">Diothas Systems</field>
+  <field key="blurb">An independent studio writing on product and technology leadership — and building the web and mobile software that puts the ideas to work.</field>
+
+  <list key="columns">
+    <item>
+      <field key="heading">WRITING</field>
+      <list key="links">
+        <item><link key="link" href="#writing">Latest Perspectives</link></item>
+        <item><link key="link" href="/perspectives/">All Perspectives</link></item>
+      </list>
+    </item>
+    <item>
+      <field key="heading">WORKSHOP</field>
+      <list key="links">
+        <item><link key="link" href="#work">Featured projects</link></item>
+        <item><link key="link" href="/workshop/">All projects</link></item>
+      </list>
+    </item>
+    <item>
+      <field key="heading">STUDIO</field>
+      <list key="links">
+        <item><link key="link" href="#about">About</link></item>
+        <item><link key="link" href="mailto:admin@diothassystems.com">admin@diothassystems.com</link></item>
+      </list>
+    </item>
+  </list>
+
+  <field key="copyright">© 2026 DIOTHAS SYSTEMS, LLC</field>
+  <field key="tagline">BUILT UNDER ONE ROOF</field>
+</section>

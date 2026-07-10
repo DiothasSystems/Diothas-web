@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ============================================================
+     Diothas Systems CMS — PERSPECTIVES (primary view: leadership writing)
+
+     This file holds the SECTION CHROME only — the kicker, heading, and
+     the "view all" link.
+
+     The articles themselves are NOT listed here. They come from the
+     folders in content/perspectives/. The newest becomes the featured
+     card, the next four become the numbered list, and the theme chips
+     are the distinct `category` values across every published article.
+
+     To publish, add a folder. Never edit this file to add an article.
+     ============================================================ -->
+<section id="perspectives">
+  <field key="sectionNo">01</field>
+  <field key="kicker">THE WRITING</field>
+  <field key="heading">Field notes from technology leadership</field>
+  <link key="viewAll" href="/perspectives/">All Perspectives →</link>
+  <field key="themesLabel">RECURRING THEMES</field>
+</section>
