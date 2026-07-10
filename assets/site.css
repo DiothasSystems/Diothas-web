@@ -294,6 +294,8 @@ img { max-width: 100%; }
 .docnav .btn-ghost { padding: 13px 24px; }
 .docnav__side { font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 1px; color: var(--brass-dim); transition: color .2s; }
 .docnav__side:hover { color: var(--brass); }
+.docnav__side a { color: var(--brass); border-bottom: 1px solid rgba(201,162,90,0.4); }
+.docnav__side a:hover { color: var(--brass-bright); }
 .docnav__live { font-size: 14px; color: var(--brass); border-bottom: 1px solid rgba(201,162,90,0.4); padding-bottom: 3px; transition: color .2s; }
 .docnav__live:hover { color: var(--brass-bright); }
 

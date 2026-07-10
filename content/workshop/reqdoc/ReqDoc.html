@@ -1,0 +1,1835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Requirements Documenter</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root {
+  --primary:#2563eb;--primary-dark:#1d4ed8;--primary-light:#eff6ff;
+  --sidebar:#1e293b;--sidebar-text:#94a3b8;
+  --bg:#f8fafc;--card:#ffffff;--border:#e2e8f0;
+  --text:#1e293b;--text2:#64748b;
+  --ok:#16a34a;--warn:#d97706;--err:#dc2626;
+  --cat-UX:#8b5cf6;--cat-System:#2563eb;--cat-Hardware:#d97706;
+  --cat-Firmware:#dc2626;--cat-Software:#16a34a;--cat-Network:#0891b2;
+  --cat-Security:#9333ea;--cat-Performance:#f59e0b;--cat-Data:#10b981;--cat-General:#6b7280;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;overflow:hidden}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
+
+/* SIDEBAR */
+.sidebar{width:250px;background:var(--sidebar);display:flex;flex-direction:column;height:100vh;overflow-y:auto;flex-shrink:0}
+.sb-logo{padding:18px 20px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sb-logo h1{color:#fff;font-size:14px;font-weight:700;line-height:1.3}
+.sb-logo p{color:var(--sidebar-text);font-size:11px;margin-top:3px}
+.sb-proj{padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.1);min-height:60px}
+.sb-proj-name{color:#fff;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-proj-ver{color:var(--sidebar-text);font-size:10px;margin-top:3px}
+.nav-section{padding:12px 0}
+.nav-label{color:var(--sidebar-text);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:0 20px 6px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 20px;color:var(--sidebar-text);cursor:pointer;font-size:12px;transition:.15s;border-left:3px solid transparent}
+.nav-item:hover{background:rgba(255,255,255,.05);color:#fff}
+.nav-item.active{background:rgba(37,99,235,.2);color:#fff;border-left-color:var(--primary)}
+.nav-item.disabled{opacity:.4;pointer-events:none}
+.nav-icon{font-size:14px}
+.nav-badge{margin-left:auto;background:var(--primary);color:#fff;font-size:9px;padding:1px 6px;border-radius:10px}
+.sb-bottom{margin-top:auto;padding:12px;border-top:1px solid rgba(255,255,255,.1);display:flex;flex-direction:column;gap:8px}
+.sb-btn{width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;padding:7px;border-radius:6px;cursor:pointer;font-size:11px;transition:.15s;text-align:center}
+.sb-btn:hover{background:rgba(255,255,255,.15)}
+.sb-btn.primary-sb{background:rgba(37,99,235,.4);border-color:rgba(37,99,235,.6)}
+.sb-btn.primary-sb:hover{background:rgba(37,99,235,.6)}
+.sb-save-loc{color:var(--sidebar-text);font-size:9px;text-align:center;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* MAIN */
+.main{flex:1;height:100vh;overflow-y:auto;display:flex;flex-direction:column}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:12px 28px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar-title{font-size:17px;font-weight:700}
+.topbar-sub{font-size:12px;color:var(--text2);margin-top:2px}
+.topbar-actions{display:flex;gap:8px;align-items:center}
+.content{flex:1;padding:28px}
+
+/* SCREENS */
+.screen{display:none}.screen.active{display:block}
+
+/* BUTTONS */
+.btn{padding:8px 16px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;border:none;transition:.15s;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-dark)}
+.btn-secondary{background:#fff;color:var(--text);border:1px solid var(--border)}.btn-secondary:hover{background:var(--bg)}
+.btn-success{background:var(--ok);color:#fff}.btn-success:hover{background:#15803d}
+.btn-danger{background:var(--err);color:#fff}
+.btn-warning{background:var(--warn);color:#fff}
+.btn-sm{padding:5px 12px;font-size:12px}
+.btn-xs{padding:3px 8px;font-size:11px}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:22px;margin-bottom:18px}
+.card-title{font-size:14px;font-weight:600;margin-bottom:14px}
+
+/* FORMS */
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:12px;font-weight:500;margin-bottom:5px}
+.form-label .opt{color:var(--text2);font-weight:400}
+.form-input,.form-textarea,.form-select{width:100%;border:1px solid var(--border);border-radius:6px;padding:8px 11px;font-size:13px;color:var(--text);background:#fff;transition:.15s;font-family:inherit}
+.form-input:focus,.form-textarea:focus,.form-select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.form-textarea{min-height:80px;resize:vertical}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+/* PILLS */
+.pill{display:inline-flex;align-items:center;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;letter-spacing:.03em}
+.pill-cat-UX{background:rgba(139,92,246,.1);color:var(--cat-UX);border:1px solid rgba(139,92,246,.25)}
+.pill-cat-System{background:rgba(37,99,235,.1);color:var(--cat-System);border:1px solid rgba(37,99,235,.25)}
+.pill-cat-Hardware{background:rgba(217,119,6,.1);color:var(--cat-Hardware);border:1px solid rgba(217,119,6,.25)}
+.pill-cat-Firmware{background:rgba(220,38,38,.1);color:var(--cat-Firmware);border:1px solid rgba(220,38,38,.25)}
+.pill-cat-Software{background:rgba(22,163,74,.1);color:var(--cat-Software);border:1px solid rgba(22,163,74,.25)}
+.pill-cat-Network{background:rgba(8,145,178,.1);color:var(--cat-Network);border:1px solid rgba(8,145,178,.25)}
+.pill-cat-Security{background:rgba(147,51,234,.1);color:var(--cat-Security);border:1px solid rgba(147,51,234,.25)}
+.pill-cat-Performance{background:rgba(245,158,11,.1);color:var(--cat-Performance);border:1px solid rgba(245,158,11,.25)}
+.pill-cat-Data{background:rgba(16,185,129,.1);color:var(--cat-Data);border:1px solid rgba(16,185,129,.25)}
+.pill-cat-General{background:rgba(107,114,128,.1);color:var(--cat-General);border:1px solid rgba(107,114,128,.25)}
+.pill-must{background:#fef2f2;color:var(--err);border:1px solid #fecaca}
+.pill-should{background:#fff7ed;color:#ea580c;border:1px solid #fdba74}
+.pill-could{background:#fefce8;color:#a16207;border:1px solid #fde047}
+.pill-wont{background:#f8fafc;color:var(--text2);border:1px solid var(--border)}
+.pill-draft{background:#f1f5f9;color:#475569;border:1px solid var(--border)}
+.pill-approved{background:#f0fdf4;color:var(--ok);border:1px solid #bbf7d0}
+.pill-deferred{background:#eff6ff;color:var(--primary);border:1px solid #bfdbfe}
+.pill-rejected{background:#fef2f2;color:var(--err);border:1px solid #fecaca}
+
+/* HOME */
+.home-wrap{max-width:680px;margin:0 auto;padding-top:40px}
+.home-hero{text-align:center;margin-bottom:36px}
+.home-hero h2{font-size:26px;font-weight:800;margin-bottom:8px}
+.home-hero p{color:var(--text2);font-size:14px}
+.home-actions{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
+.home-btn{background:#fff;border:2px solid var(--border);border-radius:12px;padding:28px 20px;text-align:center;cursor:pointer;transition:.2s}
+.home-btn:hover{border-color:var(--primary);box-shadow:0 4px 20px rgba(37,99,235,.15);transform:translateY(-2px)}
+.home-btn-icon{font-size:36px;margin-bottom:12px}
+.home-btn-title{font-size:15px;font-weight:700;margin-bottom:5px}
+.home-btn-desc{font-size:12px;color:var(--text2)}
+.recent-title{font-size:13px;font-weight:600;margin-bottom:12px;color:var(--text2);text-transform:uppercase;letter-spacing:.05em}
+.proj-item{display:flex;align-items:center;gap:12px;padding:13px 15px;border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:.15s;background:#fff;margin-bottom:8px}
+.proj-item:hover{border-color:var(--primary);background:var(--primary-light)}
+.proj-item-icon{font-size:22px}
+.proj-item-info{flex:1}
+.proj-item-title{font-size:13px;font-weight:600}
+.proj-item-meta{font-size:11px;color:var(--text2);margin-top:3px}
+.proj-item-del{background:none;border:none;color:var(--text2);cursor:pointer;font-size:14px;padding:4px;border-radius:4px}
+.proj-item-del:hover{color:var(--err);background:#fef2f2}
+
+/* DEFINITIONS */
+.def-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:8px}
+.def-row .form-input{flex:0 0 160px}
+.def-def{flex:1}
+.def-del{background:none;border:none;color:var(--err);cursor:pointer;font-size:16px;padding:8px 6px;flex-shrink:0}
+
+/* ENTRY */
+.entry-box{background:#fff;border:2px solid var(--border);border-radius:10px;padding:20px;transition:.2s}
+.entry-box.has-text{border-color:var(--primary)}
+.cat-preview{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:12px;color:var(--text2)}
+.req-counter{background:var(--primary-light);border:1px solid #bfdbfe;border-radius:8px;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.req-counter-num{font-size:22px;font-weight:800;color:var(--primary)}
+.req-counter-label{font-size:11px;color:var(--text2);margin-top:1px}
+.prev-reqs{margin-top:16px}
+.prev-req-item{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:6px;background:var(--bg);margin-bottom:6px;font-size:12px}
+.prev-req-id{color:var(--text2);font-family:monospace;min-width:55px;font-size:11px}
+
+/* REVIEW */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:22px}
+.stat-box{background:#fff;border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+.stat-val{font-size:22px;font-weight:800;color:var(--primary)}
+.stat-lbl{font-size:10px;color:var(--text2);margin-top:3px}
+.cat-section{margin-bottom:26px}
+.cat-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--border)}
+.cat-hdr h3{font-size:13px;font-weight:700}
+.cat-cnt{background:var(--bg);color:var(--text2);font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600}
+.req-card{border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:8px;background:#fff;display:flex;gap:10px;transition:.15s}
+.req-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.req-card-id{font-size:10px;color:var(--text2);font-family:monospace;font-weight:600;min-width:58px}
+.req-card-body{flex:1}
+.req-card-text{font-size:13px;line-height:1.5;margin-bottom:5px}
+.req-card-crit{font-size:11px;color:var(--text2);font-style:italic;margin-bottom:5px;padding-left:8px;border-left:2px solid var(--border)}
+.req-card-meta{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+.req-card-actions{display:flex;gap:5px;align-items:flex-start;flex-shrink:0}
+.filter-bar{display:flex;gap:10px;margin-bottom:18px;align-items:center;flex-wrap:wrap}
+.filter-bar .form-input{flex:1;min-width:200px}
+.filter-bar .form-select{width:140px}
+.empty-state{text-align:center;padding:48px 24px;color:var(--text2)}
+.empty-icon{font-size:44px;margin-bottom:14px}
+.empty-state h3{font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px}
+
+/* PUBLISH */
+.ver-box{background:var(--primary-light);border:1px solid #bfdbfe;border-radius:8px;padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;gap:16px}
+.ver-num{font-size:32px;font-weight:900;color:var(--primary)}
+.ver-info{flex:1}
+.ver-info h4{font-size:13px;font-weight:600;margin-bottom:3px}
+.ver-info p{font-size:12px;color:var(--text2)}
+.change-list{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin-bottom:18px;max-height:200px;overflow-y:auto}
+.change-item{display:flex;gap:8px;align-items:flex-start;font-size:12px;padding:4px 0;border-bottom:1px solid var(--border)}
+.change-item:last-child{border-bottom:none}
+.change-tag{font-size:9px;padding:1px 5px;border-radius:4px;font-weight:700;flex-shrink:0;margin-top:2px}
+.change-new{background:#dcfce7;color:#15803d}
+.change-mod{background:#fef9c3;color:#a16207}
+.change-del{background:#fee2e2;color:var(--err)}
+.output-checks{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.output-check{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:8px;background:#fff;cursor:pointer}
+.output-check:hover{border-color:var(--primary);background:var(--primary-light)}
+.output-check input{margin-top:2px;cursor:pointer;width:15px;height:15px;flex-shrink:0}
+.output-check-title{font-size:13px;font-weight:600;margin-bottom:2px}
+.output-check-desc{font-size:11px;color:var(--text2)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:none;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:12px;padding:26px;width:580px;max-width:92vw;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:20px}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;border-top:1px solid var(--border);padding-top:16px}
+
+/* TOASTS */
+.toast-wrap{position:fixed;bottom:22px;right:22px;z-index:200;display:flex;flex-direction:column;gap:8px}
+.toast{background:#1e293b;color:#fff;padding:11px 16px;border-radius:8px;font-size:12px;box-shadow:0 4px 16px rgba(0,0,0,.25);animation:tsIn .3s ease;display:flex;align-items:center;gap:8px}
+.toast-ok{border-left:3px solid var(--ok)}
+.toast-err{border-left:3px solid var(--err)}
+.toast-info{border-left:3px solid var(--primary)}
+@keyframes tsIn{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <h1>📋 Requirements<br>Documenter</h1>
+    <p>Product Requirements Tool</p>
+  </div>
+  <div class="sb-proj" id="sb-proj">
+    <div class="sb-proj-name" id="sb-proj-name">No project open</div>
+    <div class="sb-proj-ver" id="sb-proj-ver">—</div>
+  </div>
+  <nav class="nav-section">
+    <div class="nav-label">Project</div>
+    <div class="nav-item active" id="nav-home" onclick="showScreen('home')"><span class="nav-icon">🏠</span> Home</div>
+    <div class="nav-item disabled" id="nav-setup" onclick="showScreen('setup')"><span class="nav-icon">⚙️</span> Setup</div>
+    <div class="nav-item disabled" id="nav-entry" onclick="showScreen('entry')"><span class="nav-icon">➕</span> Add Requirements</div>
+    <div class="nav-item disabled" id="nav-review" onclick="showScreen('review')">
+      <span class="nav-icon">📋</span> Review
+      <span class="nav-badge" id="nav-req-count" style="display:none">0</span>
+    </div>
+    <div class="nav-item disabled" id="nav-publish" onclick="showScreen('publish')"><span class="nav-icon">🚀</span> Publish</div>
+  </nav>
+  <div class="sb-bottom">
+    <button class="sb-btn primary-sb" id="btn-save-draft" onclick="saveDraft()" style="display:none">💾 Save Draft</button>
+    <button class="sb-btn" onclick="setSaveLocation()">📁 Set Save Location</button>
+    <div class="sb-save-loc" id="sb-save-loc">No folder selected</div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title" id="topbar-title">Requirements Documenter</div>
+      <div class="topbar-sub" id="topbar-sub">Create and manage product requirement documents</div>
+    </div>
+    <div class="topbar-actions" id="topbar-actions"></div>
+  </div>
+  <div class="content">
+
+    <!-- HOME SCREEN -->
+    <div id="screen-home" class="screen active">
+      <div class="home-wrap">
+        <div class="home-hero">
+          <h2>Product Requirements Tool</h2>
+          <p>Create structured requirement documents for firmware, hardware, and software engineering teams.</p>
+        </div>
+        <div class="home-actions">
+          <div class="home-btn" onclick="showScreen('setup')">
+            <div class="home-btn-icon">🆕</div>
+            <div class="home-btn-title">New Project</div>
+            <div class="home-btn-desc">Start a new requirements document from scratch</div>
+          </div>
+          <div class="home-btn" onclick="openFromFile()">
+            <div class="home-btn-icon">📂</div>
+            <div class="home-btn-title">Open Project</div>
+            <div class="home-btn-desc">Load a previously saved requirements file</div>
+          </div>
+        </div>
+        <div id="recent-section" style="display:none">
+          <div class="recent-title">Recent Projects</div>
+          <div id="recent-list"></div>
+        </div>
+        <input type="file" id="file-input" accept=".json" style="display:none" onchange="loadFromFile(event)">
+      </div>
+    </div>
+
+    <!-- SETUP SCREEN -->
+    <div id="screen-setup" class="screen">
+      <div class="card">
+        <div class="card-title">Project Information</div>
+        <div class="grid2">
+          <div class="form-group">
+            <label class="form-label">Project Title <span style="color:var(--err)">*</span></label>
+            <input class="form-input" id="setup-title" placeholder="e.g., Smart Thermostat v2">
+          </div>
+          <div class="form-group" style="display:flex;gap:10px">
+            <div style="flex:1">
+              <label class="form-label">Author</label>
+              <input class="form-input" id="setup-author" placeholder="Your name">
+            </div>
+            <div style="flex:1">
+              <label class="form-label">Company</label>
+              <input class="form-input" id="setup-company" placeholder="Company name">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Product Description <span style="color:var(--err)">*</span></label>
+          <textarea class="form-textarea" id="setup-desc" rows="4" placeholder="Describe the product, its purpose, target users, and high-level goals..."></textarea>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="display:flex;justify-content:space-between;align-items:center">
+          <span>Definitions <span style="color:var(--text2);font-weight:400;font-size:12px">(optional)</span></span>
+          <button class="btn btn-secondary btn-sm" onclick="addDefRow()">+ Add Definition</button>
+        </div>
+        <div style="display:flex;gap:6px;margin-bottom:8px;padding:0 2px">
+          <div style="flex:0 0 160px;font-size:11px;font-weight:600;color:var(--text2)">Term</div>
+          <div style="flex:1;font-size:11px;font-weight:600;color:var(--text2)">Definition</div>
+        </div>
+        <div id="def-list"></div>
+        <div style="color:var(--text2);font-size:12px;font-style:italic" id="def-empty">No definitions added. Click "+ Add Definition" to add terms.</div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button class="btn btn-secondary" onclick="showScreen('home')">← Back</button>
+        <button class="btn btn-primary" onclick="initProject()">Continue to Requirements →</button>
+      </div>
+    </div>
+
+    <!-- ENTRY SCREEN -->
+    <div id="screen-entry" class="screen">
+      <div class="req-counter">
+        <div>
+          <div class="req-counter-num" id="entry-count">0</div>
+          <div class="req-counter-label">Requirements added</div>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="showScreen('review')">View All Requirements →</button>
+      </div>
+      <div class="card">
+        <div class="card-title">Add Requirement</div>
+        <div class="form-group">
+          <label class="form-label">Requirement <span style="color:var(--err)">*</span></label>
+          <textarea class="form-textarea entry-box" id="entry-text" rows="3"
+            placeholder="Describe a single, clear requirement. E.g.: 'The system shall display a real-time temperature reading updated every 5 seconds.'"
+            oninput="onEntryInput(this)" style="border:2px solid var(--border);border-radius:8px;padding:12px"></textarea>
+          <div class="cat-preview" id="cat-preview" style="display:none">
+            <span>Auto-categorized as:</span>
+            <span id="cat-preview-pill"></span>
+            <span style="color:var(--primary);cursor:pointer;text-decoration:underline" onclick="openCatOverride()">Change</span>
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="form-group">
+            <label class="form-label">Priority</label>
+            <select class="form-select" id="entry-priority">
+              <option value="Must Have">Must Have</option>
+              <option value="Should Have">Should Have</option>
+              <option value="Could Have">Could Have</option>
+              <option value="Won't Have">Won't Have</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select class="form-select" id="entry-status">
+              <option value="Draft">Draft</option>
+              <option value="Approved">Approved</option>
+              <option value="Deferred">Deferred</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Acceptance Criteria <span class="opt">(optional)</span></label>
+          <textarea class="form-textarea" id="entry-criteria" rows="2" placeholder="How will you verify this requirement is met? E.g.: 'Temperature updates within 5 seconds, verified by automated test.'"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Author <span class="opt">(optional)</span></label>
+          <input class="form-input" id="entry-author" placeholder="Who is requesting this requirement?">
+        </div>
+        <div style="display:flex;gap:10px;justify-content:space-between;align-items:center">
+          <button class="btn btn-secondary" onclick="showScreen('review')">✅ Done — Review All</button>
+          <button class="btn btn-primary" id="btn-add-req" onclick="addRequirement()">+ Add Requirement</button>
+        </div>
+      </div>
+      <div id="prev-reqs-section" style="display:none">
+        <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px">Recently Added</div>
+        <div id="prev-reqs-list"></div>
+      </div>
+    </div>
+
+    <!-- REVIEW SCREEN -->
+    <div id="screen-review" class="screen">
+      <div class="stats-grid" id="stats-grid"></div>
+      <div class="filter-bar">
+        <input class="form-input" id="filter-search" placeholder="🔍 Search requirements..." oninput="renderReview()">
+        <select class="form-select" id="filter-cat" onchange="renderReview()">
+          <option value="">All Categories</option>
+        </select>
+        <select class="form-select" id="filter-pri" onchange="renderReview()">
+          <option value="">All Priorities</option>
+          <option>Must Have</option><option>Should Have</option><option>Could Have</option><option>Won't Have</option>
+        </select>
+        <select class="form-select" id="filter-status" onchange="renderReview()">
+          <option value="">All Statuses</option>
+          <option>Draft</option><option>Approved</option><option>Deferred</option><option>Rejected</option>
+        </select>
+      </div>
+      <div id="review-body"></div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+        <button class="btn btn-secondary" onclick="showScreen('entry')">+ Add More Requirements</button>
+        <button class="btn btn-success" onclick="showScreen('publish')">🚀 Publish / Generate Outputs</button>
+      </div>
+    </div>
+
+    <!-- PUBLISH SCREEN -->
+    <div id="screen-publish" class="screen">
+      <div class="card">
+        <div class="card-title">Version & Publication</div>
+        <div class="ver-box">
+          <div>
+            <div style="font-size:11px;color:var(--text2);margin-bottom:2px">NEXT VERSION</div>
+            <div class="ver-num" id="pub-ver-num">1.0</div>
+          </div>
+          <div class="ver-info">
+            <h4 id="pub-ver-title">First Release</h4>
+            <p id="pub-ver-desc">This will be the first published version of this document.</p>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="toggleVerOverride()">Override</button>
+        </div>
+        <div id="ver-override-box" style="display:none;margin-bottom:16px">
+          <label class="form-label">Override Version Number</label>
+          <input class="form-input" id="ver-override" placeholder="e.g., 2.0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Change Log / Release Notes</label>
+          <textarea class="form-textarea" id="pub-changelog" rows="3" placeholder="Describe what changed in this version..."></textarea>
+        </div>
+        <div id="pub-change-list-wrap" style="display:none">
+          <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px">Detected Changes from Previous Version</div>
+          <div class="change-list" id="pub-change-list"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Output Files</div>
+        <div class="output-checks">
+          <label class="output-check">
+            <input type="checkbox" id="out-word" checked>
+            <div>
+              <div class="output-check-title">📄 Product Concept Document (.docx)</div>
+              <div class="output-check-desc">Full requirements document with cover page, definitions, and requirements organized by category. For distribution to all engineering teams.</div>
+            </div>
+          </label>
+          <label class="output-check">
+            <input type="checkbox" id="out-excel" checked>
+            <div>
+              <div class="output-check-title">📊 Requirements Spreadsheet (.xlsx)</div>
+              <div class="output-check-desc">Sortable and filterable spreadsheet with all requirements, priorities, statuses, and acceptance criteria. Includes summary sheet.</div>
+            </div>
+          </label>
+          <label class="output-check">
+            <input type="checkbox" id="out-claude" checked>
+            <div>
+              <div class="output-check-title">🤖 Claude Code Input Document (.docx)</div>
+              <div class="output-check-desc">Structured prompt document for Claude Code, organized by engineering domain (firmware, hardware, software) with acceptance criteria and constraints.</div>
+            </div>
+          </label>
+        </div>
+        <div id="pub-stats-preview" style="display:flex;gap:16px;font-size:12px;color:var(--text2);margin-bottom:16px;flex-wrap:wrap"></div>
+        <div style="display:flex;gap:10px;justify-content:space-between">
+          <button class="btn btn-secondary" onclick="showScreen('review')">← Back to Review</button>
+          <div style="display:flex;gap:10px">
+            <button class="btn btn-secondary" onclick="saveDraft()">💾 Save Draft</button>
+            <button class="btn btn-success" onclick="publishAndGenerate()">🚀 Publish & Generate Files</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</main>
+
+<!-- MODAL: Edit Requirement -->
+<div class="modal-overlay" id="modal-edit">
+  <div class="modal">
+    <div class="modal-title">Edit Requirement</div>
+    <div class="form-group">
+      <label class="form-label">Requirement Text <span style="color:var(--err)">*</span></label>
+      <textarea class="form-textarea" id="edit-text" rows="3"></textarea>
+    </div>
+    <div class="grid2">
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select class="form-select" id="edit-category"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Priority</label>
+        <select class="form-select" id="edit-priority">
+          <option>Must Have</option><option>Should Have</option><option>Could Have</option><option>Won't Have</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Status</label>
+      <select class="form-select" id="edit-status">
+        <option>Draft</option><option>Approved</option><option>Deferred</option><option>Rejected</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Acceptance Criteria</label>
+      <textarea class="form-textarea" id="edit-criteria" rows="2"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Author</label>
+      <input class="form-input" id="edit-author">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-edit')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEdit()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Category Override (during entry) -->
+<div class="modal-overlay" id="modal-cat">
+  <div class="modal" style="width:380px">
+    <div class="modal-title">Change Category</div>
+    <div class="form-group">
+      <label class="form-label">Select Category</label>
+      <select class="form-select" id="entry-cat-override"></select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-cat')">Cancel</button>
+      <button class="btn btn-primary" onclick="applyCatOverride()">Apply</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Confirm Delete -->
+<div class="modal-overlay" id="modal-confirm">
+  <div class="modal" style="width:380px">
+    <div class="modal-title">⚠️ Delete Requirement?</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:20px" id="confirm-msg">This cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-confirm')">Cancel</button>
+      <button class="btn btn-danger" id="confirm-ok-btn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Open Project -->
+<div class="modal-overlay" id="modal-open">
+  <div class="modal">
+    <div class="modal-title">Open Project</div>
+    <div id="modal-open-list"></div>
+    <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:16px">
+      <button class="btn btn-secondary btn-sm" onclick="document.getElementById('file-input').click();closeModal('modal-open')">📂 Browse for File...</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-open')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+// ============================================================
+// CONSTANTS
+// ============================================================
+const CATEGORIES = ['UX','System','Hardware','Firmware','Software','Network','Security','Performance','Data','General'];
+const PRIORITIES = ['Must Have','Should Have','Could Have',"Won't Have"];
+const STATUSES = ['Draft','Approved','Deferred','Rejected'];
+const DB_NAME = 'reqDocDB';
+const DB_VER = 1;
+const STORE = 'projects';
+
+// Auto-categorization keyword map
+const CAT_KEYS = {
+  UX: ['user interface','ui ','screen','display','button','click','tap','swipe','navigate','navigation','visual','design','layout','menu','dialog','modal','form input','label','icon','tooltip','notification','responsive','accessibility','usability','user experience','ux','color','font','theme','dashboard','panel','widget','scroll','gesture','animation','transition','onboarding','page','view','render','show','hide','toggle','sidebar','toolbar','header','footer','breadcrumb','dropdown'],
+  System: ['system','operating system','os ','process','service','startup','shutdown','restart','initialize','configuration','config','settings','logging','event log','state machine','workflow','pipeline','scheduler','platform','environment','runtime','daemon','background','signal','interrupt handler'],
+  Hardware: ['hardware','device','sensor','physical','board','pcb','chip','processor','microprocessor','power supply','battery','voltage','current draw','port','connector','cable','gpio','adc','dac','pwm','peripheral','component','mounting','enclosure','thermal','heat sink','fan','led','motor','actuator','relay','oscillator','crystal','capacitor','resistor','antenna','rf '],
+  Firmware: ['firmware','embedded','microcontroller','mcu','bootloader','boot sequence','flash memory','interrupt','driver','hal','rtos','real-time','register','spi','i2c','uart','can bus','usb stack','ota update','over-the-air','watchdog','dma','linker','heap','stack overflow','flash wear'],
+  Software: ['software','application','app ','feature','algorithm','module','library','sdk','plugin','class','object','function','api client','rest api','graphql','frontend','backend','middleware','executable','install','update mechanism','version check','dependency','package','cli ','gui ','desktop app','mobile app'],
+  Network: ['network','wifi','wi-fi','wireless','bluetooth','ble','zigbee','z-wave','tcp','udp','http','https','rest','mqtt','websocket','protocol','communication','connection','socket','vpn','lan','wan','internet','cloud','server','endpoint','latency','bandwidth','packet','router','gateway','ip address','dns','tls','certificate authority'],
+  Security: ['security','authentication','authorization','password','credential','token','encrypt','decrypt','ssl','tls cert','certificate','digital signature','hash','permission','access control','rbac','role','privilege','audit log','compliance','gdpr','privacy','vulnerability','firewall','malware','threat','secure boot','tamper','session management','2fa','oauth','jwt'],
+  Performance: ['performance','speed','latency','throughput','response time','load time','memory usage','cpu usage','gpu','optimization','caching','buffer','concurrency','scalability','benchmark','fast','timeout','millisecond','fps','frame rate','jitter','profiling','bottleneck','peak load','stress test','memory leak'],
+  Data: ['database','data storage','file system','record','schema','query','index','backup','synchronize','cache','persist','save state','export','import','json format','xml format','csv','sql','nosql','table','column','row','field','document store','archive','data model','migration','transaction','data integrity','data validation','checksum']
+};
+
+// ============================================================
+// STATE
+// ============================================================
+let db = null;
+let project = null;
+let projects = [];
+let editingReqId = null;
+let tempCatOverride = null;
+let saveDirectoryHandle = null;
+let currentSaveLocationName = null;
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  initDB().then(() => {
+    loadProjects().then(() => {
+      renderRecentProjects();
+    });
+  });
+  // Populate category dropdowns
+  populateCatSelects();
+});
+
+// ============================================================
+// INDEXEDDB
+// ============================================================
+function initDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VER);
+    req.onupgradeneeded = (e) => {
+      const d = e.target.result;
+      if (!d.objectStoreNames.contains(STORE)) {
+        const s = d.createObjectStore(STORE, { keyPath: 'id' });
+        s.createIndex('lastModified', 'lastModified', { unique: false });
+      }
+    };
+    req.onsuccess = (e) => { db = e.target.result; resolve(); };
+    req.onerror = () => resolve(); // graceful fallback
+  });
+}
+
+function dbSave(proj) {
+  if (!db) return Promise.resolve();
+  return new Promise((resolve) => {
+    const tx = db.transaction(STORE, 'readwrite');
+    tx.objectStore(STORE).put(proj);
+    tx.oncomplete = resolve;
+    tx.onerror = resolve;
+  });
+}
+
+function dbDelete(id) {
+  if (!db) return Promise.resolve();
+  return new Promise((resolve) => {
+    const tx = db.transaction(STORE, 'readwrite');
+    tx.objectStore(STORE).delete(id);
+    tx.oncomplete = resolve;
+  });
+}
+
+function loadProjects() {
+  if (!db) return Promise.resolve();
+  return new Promise((resolve) => {
+    const tx = db.transaction(STORE, 'readonly');
+    const req = tx.objectStore(STORE).getAll();
+    req.onsuccess = () => {
+      projects = (req.result || []).sort((a,b) => new Date(b.lastModified) - new Date(a.lastModified));
+      resolve();
+    };
+    req.onerror = resolve;
+  });
+}
+
+// ============================================================
+// PROJECT MANAGEMENT
+// ============================================================
+function generateId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+}
+
+function createProject(title, desc, author, company, defs) {
+  return {
+    id: generateId(),
+    title, desc, author, company,
+    definitions: defs,
+    requirements: [],
+    versions: [],
+    currentVersion: null,
+    isDraft: true,
+    dateCreated: new Date().toISOString(),
+    lastModified: new Date().toISOString()
+  };
+}
+
+function getReqId(category, proj) {
+  const prefix = category === 'UX' ? 'UX' : category === 'System' ? 'SYS' : category === 'Hardware' ? 'HW' : category === 'Firmware' ? 'FW' : category === 'Software' ? 'SW' : category === 'Network' ? 'NET' : category === 'Security' ? 'SEC' : category === 'Performance' ? 'PERF' : category === 'Data' ? 'DATA' : 'GEN';
+  const count = (proj.requirements.filter(r => r.category === category).length) + 1;
+  return `${prefix}-${String(count).padStart(3,'0')}`;
+}
+
+function addReq(text, category, priority, status, criteria, author) {
+  const id = getReqId(category, project);
+  const req = {
+    id,
+    uid: generateId(),
+    text: text.trim(),
+    category,
+    autoCategory: category,
+    priority,
+    status,
+    acceptanceCriteria: criteria.trim(),
+    author: author.trim(),
+    dateAdded: new Date().toISOString()
+  };
+  project.requirements.push(req);
+  project.lastModified = new Date().toISOString();
+  autoSave();
+  return req;
+}
+
+function updateReq(uid, fields) {
+  const idx = project.requirements.findIndex(r => r.uid === uid);
+  if (idx < 0) return;
+  const old = project.requirements[idx];
+  const catChanged = fields.category && fields.category !== old.category;
+  Object.assign(project.requirements[idx], fields);
+  if (catChanged) {
+    // Reassign ID for new category
+    project.requirements[idx].id = getReqIdForExisting(fields.category, project, uid);
+  }
+  project.lastModified = new Date().toISOString();
+  autoSave();
+}
+
+function getReqIdForExisting(category, proj, excludeUid) {
+  const prefix = catPrefix(category);
+  const count = proj.requirements.filter(r => r.category === category && r.uid !== excludeUid).length + 1;
+  return `${prefix}-${String(count).padStart(3,'0')}`;
+}
+
+function catPrefix(cat) {
+  const m = {UX:'UX',System:'SYS',Hardware:'HW',Firmware:'FW',Software:'SW',Network:'NET',Security:'SEC',Performance:'PERF',Data:'DATA',General:'GEN'};
+  return m[cat] || 'GEN';
+}
+
+function deleteReq(uid) {
+  project.requirements = project.requirements.filter(r => r.uid !== uid);
+  resequenceIds();
+  project.lastModified = new Date().toISOString();
+  autoSave();
+}
+
+function resequenceIds() {
+  const counters = {};
+  project.requirements.forEach(r => {
+    const p = catPrefix(r.category);
+    if (!counters[p]) counters[p] = 0;
+    counters[p]++;
+    r.id = `${p}-${String(counters[p]).padStart(3,'0')}`;
+  });
+}
+
+function autoSave() {
+  if (project) {
+    dbSave(project);
+    if (!projects.find(p => p.id === project.id)) {
+      projects.unshift(project);
+    } else {
+      const idx = projects.findIndex(p => p.id === project.id);
+      projects[idx] = project;
+    }
+  }
+}
+
+// ============================================================
+// AUTO-CATEGORIZE
+// ============================================================
+function categorize(text) {
+  const t = text.toLowerCase();
+  const scores = {};
+  for (const [cat, keys] of Object.entries(CAT_KEYS)) {
+    scores[cat] = keys.reduce((s, k) => s + (t.includes(k) ? 1 : 0), 0);
+  }
+  const best = Object.entries(scores).sort((a,b) => b[1]-a[1])[0];
+  return best[1] > 0 ? best[0] : 'General';
+}
+
+// ============================================================
+// VERSIONING
+// ============================================================
+function calcNextVersion() {
+  if (!project.currentVersion) return '1.0';
+  const [maj, min] = project.currentVersion.split('.').map(Number);
+  if (project.versions.length > 0) {
+    const lastVer = project.versions[project.versions.length - 1];
+    const prev = lastVer.reqSnapshot || [];
+    const curr = project.requirements;
+    const prevUids = new Set(prev.map(r => r.uid));
+    const currUids = new Set(curr.map(r => r.uid));
+    const added = [...currUids].filter(u => !prevUids.has(u)).length;
+    const removed = [...prevUids].filter(u => !currUids.has(u)).length;
+    const modified = curr.filter(r => {
+      const p = prev.find(x => x.uid === r.uid);
+      return p && (p.text !== r.text || p.category !== r.category);
+    }).length;
+    const total = added + removed + modified;
+    const pct = total / Math.max(prev.length, curr.length, 1);
+    if (pct >= 0.3) return `${maj+1}.0`;
+    return `${maj}.${min+1}`;
+  }
+  return `${maj}.${min+1}`;
+}
+
+function getChanges() {
+  if (!project.versions.length) return [];
+  const prev = project.versions[project.versions.length - 1].reqSnapshot || [];
+  const curr = project.requirements;
+  const changes = [];
+  const prevUids = new Set(prev.map(r => r.uid));
+  const currUids = new Set(curr.map(r => r.uid));
+  curr.forEach(r => {
+    if (!prevUids.has(r.uid)) changes.push({ type: 'new', req: r });
+    else {
+      const p = prev.find(x => x.uid === r.uid);
+      if (p && (p.text !== r.text || p.category !== r.category || p.priority !== r.priority)) {
+        changes.push({ type: 'mod', req: r, prev: p });
+      }
+    }
+  });
+  prev.forEach(r => {
+    if (!currUids.has(r.uid)) changes.push({ type: 'del', req: r });
+  });
+  return changes;
+}
+
+// ============================================================
+// SCREEN MANAGEMENT
+// ============================================================
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(`screen-${name}`).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const nav = document.getElementById(`nav-${name}`);
+  if (nav) nav.classList.add('active');
+  updateTopbar(name);
+  if (name === 'review') renderReview();
+  if (name === 'publish') renderPublish();
+  if (name === 'entry') renderEntryCount();
+  if (name === 'home') renderRecentProjects();
+}
+
+function updateTopbar(name) {
+  const titles = {
+    home: ['Requirements Documenter', 'Create and manage product requirement documents'],
+    setup: ['Project Setup', 'Configure your project information and definitions'],
+    entry: ['Add Requirements', 'Enter requirements one at a time — the system will organize them for you'],
+    review: ['Review Requirements', 'View, edit, and organize all requirements by category'],
+    publish: ['Publish & Generate', 'Set version, review changes, and generate output files']
+  };
+  const [title, sub] = titles[name] || ['Requirements Documenter', ''];
+  document.getElementById('topbar-title').textContent = project ? project.title : title;
+  document.getElementById('topbar-sub').textContent = sub;
+  // Topbar actions
+  const actions = document.getElementById('topbar-actions');
+  if (project && name !== 'home' && name !== 'setup') {
+    actions.innerHTML = `<button class="btn btn-secondary btn-sm" onclick="saveDraft()">💾 Save</button>`;
+  } else {
+    actions.innerHTML = '';
+  }
+}
+
+function enableNav() {
+  ['setup','entry','review','publish'].forEach(n => {
+    document.getElementById(`nav-${n}`).classList.remove('disabled');
+  });
+  document.getElementById('btn-save-draft').style.display = 'block';
+}
+
+function updateSidebar() {
+  if (!project) return;
+  document.getElementById('sb-proj-name').textContent = project.title;
+  document.getElementById('sb-proj-ver').textContent = project.currentVersion ? `v${project.currentVersion}${project.isDraft?' (Draft)':''}` : 'Draft — not published';
+  const cnt = project.requirements.length;
+  const badge = document.getElementById('nav-req-count');
+  badge.textContent = cnt;
+  badge.style.display = cnt > 0 ? 'inline' : 'none';
+}
+
+// ============================================================
+// SETUP SCREEN
+// ============================================================
+function addDefRow(term='', definition='') {
+  const list = document.getElementById('def-list');
+  const empty = document.getElementById('def-empty');
+  empty.style.display = 'none';
+  const uid = generateId();
+  const row = document.createElement('div');
+  row.className = 'def-row';
+  row.id = `def-${uid}`;
+  row.innerHTML = `<input class="form-input" placeholder="Term" value="${escHtml(term)}" style="flex:0 0 160px">
+    <input class="form-input def-def" placeholder="Definition" value="${escHtml(definition)}" style="flex:1">
+    <button class="def-del" onclick="removeDefRow('${uid}')">✕</button>`;
+  list.appendChild(row);
+}
+
+function removeDefRow(uid) {
+  document.getElementById(`def-${uid}`).remove();
+  if (!document.querySelectorAll('.def-row').length) {
+    document.getElementById('def-empty').style.display = 'block';
+  }
+}
+
+function getDefinitions() {
+  return Array.from(document.querySelectorAll('.def-row')).map(row => {
+    const inputs = row.querySelectorAll('input');
+    return { id: generateId(), term: inputs[0].value.trim(), definition: inputs[1].value.trim() };
+  }).filter(d => d.term || d.definition);
+}
+
+function initProject() {
+  const title = document.getElementById('setup-title').value.trim();
+  const desc = document.getElementById('setup-desc').value.trim();
+  if (!title) { toast('Please enter a project title.', 'err'); return; }
+  if (!desc) { toast('Please enter a product description.', 'err'); return; }
+  const author = document.getElementById('setup-author').value.trim();
+  const company = document.getElementById('setup-company').value.trim();
+  const defs = getDefinitions();
+  // Check if editing existing or new
+  if (!project || project.title !== title) {
+    project = createProject(title, desc, author, company, defs);
+  } else {
+    project.title = title; project.desc = desc;
+    project.author = author; project.company = company;
+    project.definitions = defs;
+    project.lastModified = new Date().toISOString();
+  }
+  autoSave();
+  enableNav();
+  updateSidebar();
+  showScreen('entry');
+  toast('Project initialized!', 'ok');
+}
+
+// ============================================================
+// ENTRY SCREEN
+// ============================================================
+let currentAutoCategory = 'General';
+
+function onEntryInput(el) {
+  const val = el.value.trim();
+  const preview = document.getElementById('cat-preview');
+  if (val.length > 8) {
+    currentAutoCategory = categorize(val);
+    document.getElementById('cat-preview-pill').outerHTML = `<span id="cat-preview-pill" class="pill pill-cat-${currentAutoCategory}">${currentAutoCategory}</span>`;
+    preview.style.display = 'flex';
+    el.style.borderColor = 'var(--primary)';
+  } else {
+    preview.style.display = 'none';
+    el.style.borderColor = 'var(--border)';
+  }
+}
+
+function openCatOverride() {
+  const sel = document.getElementById('entry-cat-override');
+  sel.value = currentAutoCategory;
+  openModal('modal-cat');
+}
+
+function applyCatOverride() {
+  currentAutoCategory = document.getElementById('entry-cat-override').value;
+  document.getElementById('cat-preview-pill').className = `pill pill-cat-${currentAutoCategory}`;
+  document.getElementById('cat-preview-pill').textContent = currentAutoCategory;
+  closeModal('modal-cat');
+}
+
+function addRequirement() {
+  if (!project) { toast('No project open.', 'err'); return; }
+  const text = document.getElementById('entry-text').value.trim();
+  if (!text) { toast('Please enter a requirement.', 'err'); return; }
+  const cat = currentAutoCategory || categorize(text);
+  const pri = document.getElementById('entry-priority').value;
+  const sta = document.getElementById('entry-status').value;
+  const crit = document.getElementById('entry-criteria').value;
+  const auth = document.getElementById('entry-author').value || project.author || '';
+  addReq(text, cat, pri, sta, crit, auth);
+  // Reset form
+  document.getElementById('entry-text').value = '';
+  document.getElementById('entry-criteria').value = '';
+  document.getElementById('cat-preview').style.display = 'none';
+  document.getElementById('entry-text').style.borderColor = 'var(--border)';
+  currentAutoCategory = 'General';
+  renderEntryCount();
+  updateSidebar();
+  toast(`Requirement added as ${cat}.`, 'ok');
+}
+
+function renderEntryCount() {
+  if (!project) return;
+  const cnt = project.requirements.length;
+  document.getElementById('entry-count').textContent = cnt;
+  const section = document.getElementById('prev-reqs-section');
+  const list = document.getElementById('prev-reqs-list');
+  if (cnt > 0) {
+    section.style.display = 'block';
+    const last5 = [...project.requirements].reverse().slice(0, 5);
+    list.innerHTML = last5.map(r => `
+      <div class="prev-req-item">
+        <span class="prev-req-id">${r.id}</span>
+        <span class="pill pill-cat-${r.category}" style="flex-shrink:0">${r.category}</span>
+        <span style="flex:1">${escHtml(r.text.length > 90 ? r.text.slice(0,90)+'…' : r.text)}</span>
+      </div>`).join('');
+  } else {
+    section.style.display = 'none';
+  }
+}
+
+// ============================================================
+// REVIEW SCREEN
+// ============================================================
+function renderReview() {
+  if (!project) return;
+  updateSidebar();
+  renderStats();
+  const search = (document.getElementById('filter-search')?.value || '').toLowerCase();
+  const catF = document.getElementById('filter-cat')?.value || '';
+  const priF = document.getElementById('filter-pri')?.value || '';
+  const staF = document.getElementById('filter-status')?.value || '';
+
+  // Update filter cat dropdown
+  const catSel = document.getElementById('filter-cat');
+  const usedCats = [...new Set(project.requirements.map(r => r.category))];
+  const current = catSel.value;
+  catSel.innerHTML = `<option value="">All Categories</option>` + usedCats.map(c => `<option ${c===current?'selected':''}>${c}</option>`).join('');
+
+  let reqs = project.requirements.filter(r => {
+    if (search && !r.text.toLowerCase().includes(search) && !r.id.toLowerCase().includes(search)) return false;
+    if (catF && r.category !== catF) return false;
+    if (priF && r.priority !== priF) return false;
+    if (staF && r.status !== staF) return false;
+    return true;
+  });
+
+  const body = document.getElementById('review-body');
+  if (reqs.length === 0) {
+    body.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><h3>No requirements yet</h3><p>Go to "Add Requirements" to start adding them.</p></div>`;
+    return;
+  }
+
+  // Group by category
+  const grouped = {};
+  CATEGORIES.forEach(c => { grouped[c] = []; });
+  reqs.forEach(r => { if (grouped[r.category]) grouped[r.category].push(r); });
+
+  let html = '';
+  CATEGORIES.forEach(cat => {
+    const list = grouped[cat];
+    if (!list.length) return;
+    html += `<div class="cat-section">
+      <div class="cat-hdr">
+        <span class="pill pill-cat-${cat}">${cat}</span>
+        <h3>${catFullName(cat)}</h3>
+        <span class="cat-cnt">${list.length} requirement${list.length!==1?'s':''}</span>
+      </div>`;
+    list.forEach(r => {
+      html += reqCardHtml(r);
+    });
+    html += `</div>`;
+  });
+  body.innerHTML = html;
+}
+
+function reqCardHtml(r) {
+  const critHtml = r.acceptanceCriteria ? `<div class="req-card-crit">✓ ${escHtml(r.acceptanceCriteria)}</div>` : '';
+  const authorHtml = r.author ? `<span style="font-size:11px;color:var(--text2)">by ${escHtml(r.author)}</span>` : '';
+  const dateHtml = r.dateAdded ? `<span style="font-size:10px;color:var(--text2)">${new Date(r.dateAdded).toLocaleDateString()}</span>` : '';
+  return `<div class="req-card" id="rc-${r.uid}">
+    <div class="req-card-id">${r.id}</div>
+    <div class="req-card-body">
+      <div class="req-card-text">${escHtml(r.text)}</div>
+      ${critHtml}
+      <div class="req-card-meta">
+        <span class="pill pill-cat-${r.category}">${r.category}</span>
+        <span class="pill ${priPillClass(r.priority)}">${r.priority}</span>
+        <span class="pill ${staPillClass(r.status)}">${r.status}</span>
+        ${authorHtml}${dateHtml}
+      </div>
+    </div>
+    <div class="req-card-actions">
+      <button class="btn btn-secondary btn-xs" onclick="openEdit('${r.uid}')">✏️</button>
+      <button class="btn btn-xs" style="background:#fef2f2;color:var(--err);border:1px solid #fecaca" onclick="confirmDelete('${r.uid}')">🗑️</button>
+    </div>
+  </div>`;
+}
+
+function renderStats() {
+  const grid = document.getElementById('stats-grid');
+  if (!project) { grid.innerHTML = ''; return; }
+  const reqs = project.requirements;
+  const total = reqs.length;
+  const must = reqs.filter(r => r.priority === 'Must Have').length;
+  const approved = reqs.filter(r => r.status === 'Approved').length;
+  const cats = new Set(reqs.map(r => r.category)).size;
+  grid.innerHTML = `
+    <div class="stat-box"><div class="stat-val">${total}</div><div class="stat-lbl">Total Requirements</div></div>
+    <div class="stat-box"><div class="stat-val" style="color:var(--err)">${must}</div><div class="stat-lbl">Must Have</div></div>
+    <div class="stat-box"><div class="stat-val" style="color:var(--ok)">${approved}</div><div class="stat-lbl">Approved</div></div>
+    <div class="stat-box"><div class="stat-val">${cats}</div><div class="stat-lbl">Categories</div></div>
+    ${CATEGORIES.filter(c => reqs.some(r=>r.category===c)).map(c => {
+      const n = reqs.filter(r=>r.category===c).length;
+      return `<div class="stat-box"><div class="stat-val" style="color:var(--cat-${c})">${n}</div><div class="stat-lbl">${c}</div></div>`;
+    }).join('')}`;
+}
+
+// ============================================================
+// EDIT MODAL
+// ============================================================
+function openEdit(uid) {
+  editingReqId = uid;
+  const r = project.requirements.find(x => x.uid === uid);
+  if (!r) return;
+  document.getElementById('edit-text').value = r.text;
+  document.getElementById('edit-category').value = r.category;
+  document.getElementById('edit-priority').value = r.priority;
+  document.getElementById('edit-status').value = r.status;
+  document.getElementById('edit-criteria').value = r.acceptanceCriteria || '';
+  document.getElementById('edit-author').value = r.author || '';
+  openModal('modal-edit');
+}
+
+function saveEdit() {
+  const text = document.getElementById('edit-text').value.trim();
+  if (!text) { toast('Requirement text is required.', 'err'); return; }
+  updateReq(editingReqId, {
+    text,
+    category: document.getElementById('edit-category').value,
+    priority: document.getElementById('edit-priority').value,
+    status: document.getElementById('edit-status').value,
+    acceptanceCriteria: document.getElementById('edit-criteria').value.trim(),
+    author: document.getElementById('edit-author').value.trim()
+  });
+  closeModal('modal-edit');
+  resequenceIds();
+  renderReview();
+  toast('Requirement updated.', 'ok');
+}
+
+function confirmDelete(uid) {
+  const r = project.requirements.find(x => x.uid === uid);
+  document.getElementById('confirm-msg').textContent = `Delete "${r.text.slice(0,60)}${r.text.length>60?'…':''}"? This cannot be undone.`;
+  document.getElementById('confirm-ok-btn').onclick = () => {
+    deleteReq(uid);
+    closeModal('modal-confirm');
+    renderReview();
+    toast('Requirement deleted.', 'ok');
+  };
+  openModal('modal-confirm');
+}
+
+// ============================================================
+// PUBLISH SCREEN
+// ============================================================
+function renderPublish() {
+  if (!project) return;
+  const ver = calcNextVersion();
+  document.getElementById('pub-ver-num').textContent = `v${ver}`;
+  const isFirst = !project.currentVersion;
+  document.getElementById('pub-ver-title').textContent = isFirst ? 'First Release' : `Incremental Update from v${project.currentVersion}`;
+  const [maj, min] = ver.split('.').map(Number);
+  const isMajor = !isFirst && parseInt(ver) > parseInt(project.currentVersion);
+  document.getElementById('pub-ver-desc').textContent = isFirst
+    ? 'This will be the first published version of this document.'
+    : isMajor
+      ? `Major version bump — significant changes detected (≥30% of requirements changed).`
+      : `Minor update — incremental changes from v${project.currentVersion}.`;
+
+  const changes = getChanges();
+  const wrapEl = document.getElementById('pub-change-list-wrap');
+  if (changes.length > 0) {
+    wrapEl.style.display = 'block';
+    document.getElementById('pub-change-list').innerHTML = changes.map(c => {
+      if (c.type === 'new') return `<div class="change-item"><span class="change-tag change-new">NEW</span><span>${escHtml(c.req.id)}: ${escHtml(c.req.text.slice(0,80))}</span></div>`;
+      if (c.type === 'del') return `<div class="change-item"><span class="change-tag change-del">DEL</span><span>${escHtml(c.req.id)}: ${escHtml(c.req.text.slice(0,80))}</span></div>`;
+      return `<div class="change-item"><span class="change-tag change-mod">MOD</span><span>${escHtml(c.req.id)}: ${escHtml(c.req.text.slice(0,80))}</span></div>`;
+    }).join('');
+  } else {
+    wrapEl.style.display = 'none';
+  }
+
+  // Stats preview
+  const reqs = project.requirements;
+  document.getElementById('pub-stats-preview').innerHTML =
+    CATEGORIES.filter(c => reqs.some(r=>r.category===c)).map(c => {
+      const n = reqs.filter(r=>r.category===c).length;
+      return `<span><strong style="color:var(--cat-${c})">${n}</strong> ${c}</span>`;
+    }).join(' · ');
+}
+
+function toggleVerOverride() {
+  const box = document.getElementById('ver-override-box');
+  box.style.display = box.style.display === 'none' ? 'block' : 'none';
+}
+
+async function publishAndGenerate() {
+  if (!project) return;
+  if (!project.requirements.length) { toast('Add requirements before publishing.', 'err'); return; }
+
+  const verOverride = document.getElementById('ver-override').value.trim();
+  const ver = verOverride || calcNextVersion();
+  const changelog = document.getElementById('pub-changelog').value.trim();
+
+  // Record this version
+  const versionRecord = {
+    version: ver,
+    date: new Date().toISOString(),
+    changeLog: changelog,
+    reqCount: project.requirements.length,
+    reqSnapshot: JSON.parse(JSON.stringify(project.requirements))
+  };
+  project.versions.push(versionRecord);
+  project.currentVersion = ver;
+  project.isDraft = false;
+  project.lastModified = new Date().toISOString();
+
+  autoSave();
+  updateSidebar();
+
+  const outWord = document.getElementById('out-word').checked;
+  const outExcel = document.getElementById('out-excel').checked;
+  const outClaude = document.getElementById('out-claude').checked;
+
+  const slug = project.title.replace(/[^a-z0-9]/gi,'_');
+
+  if (outWord) {
+    try {
+      const blob = await generateRequirementsDocx(project);
+      downloadBlob(blob, `${slug}_Requirements_v${ver}.docx`);
+    } catch(e) { console.error(e); toast('Word doc error: '+e.message, 'err'); }
+  }
+  if (outExcel) {
+    try {
+      const buf = generateExcel(project);
+      downloadBlob(new Blob([buf], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}), `${slug}_Requirements_v${ver}.xlsx`);
+    } catch(e) { console.error(e); toast('Excel error: '+e.message, 'err'); }
+  }
+  if (outClaude) {
+    try {
+      const blob = await generateClaudeDocx(project);
+      downloadBlob(blob, `${slug}_ClaudeCode_v${ver}.docx`);
+    } catch(e) { console.error(e); toast('Claude doc error: '+e.message, 'err'); }
+  }
+
+  toast(`Published v${ver} — files downloading!`, 'ok');
+}
+
+// ============================================================
+// SAVE / LOAD
+// ============================================================
+async function saveDraft() {
+  if (!project) { toast('No project open.', 'err'); return; }
+  project.isDraft = true;
+  project.lastModified = new Date().toISOString();
+  autoSave();
+  const slug = project.title.replace(/[^a-z0-9]/gi,'_');
+  const fname = `${slug}_Draft.json`;
+  const json = JSON.stringify(project, null, 2);
+  if (saveDirectoryHandle) {
+    try {
+      const fh = await saveDirectoryHandle.getFileHandle(fname, { create: true });
+      const w = await fh.createWritable();
+      await w.write(json); await w.close();
+      toast(`Saved to ${currentSaveLocationName}/${fname}`, 'ok');
+      return;
+    } catch(e) {}
+  }
+  downloadBlob(new Blob([json], {type:'application/json'}), fname);
+  toast('Draft saved!', 'ok');
+}
+
+async function setSaveLocation() {
+  if ('showDirectoryPicker' in window) {
+    try {
+      const h = await window.showDirectoryPicker({ mode: 'readwrite' });
+      saveDirectoryHandle = h;
+      currentSaveLocationName = h.name;
+      document.getElementById('sb-save-loc').textContent = `📁 ${h.name}`;
+      toast(`Save location set: ${h.name}`, 'ok');
+    } catch(e) {}
+  } else {
+    toast('File System Access API not available. Files will download automatically.', 'info');
+  }
+}
+
+function openFromFile() {
+  // Show modal with recent projects + file picker option
+  const list = document.getElementById('modal-open-list');
+  if (projects.length) {
+    list.innerHTML = projects.map(p => `
+      <div class="proj-item" onclick="loadProject('${p.id}')">
+        <span class="proj-item-icon">${p.isDraft ? '📝' : '📋'}</span>
+        <div class="proj-item-info">
+          <div class="proj-item-title">${escHtml(p.title)}</div>
+          <div class="proj-item-meta">${p.requirements.length} requirements · ${p.isDraft?'Draft':('v'+p.currentVersion)} · ${new Date(p.lastModified).toLocaleDateString()}</div>
+        </div>
+        <button class="proj-item-del" onclick="event.stopPropagation();deleteProject('${p.id}')" title="Remove from list">✕</button>
+      </div>`).join('');
+  } else {
+    list.innerHTML = `<p style="font-size:13px;color:var(--text2);text-align:center;padding:20px">No recent projects found.</p>`;
+  }
+  openModal('modal-open');
+}
+
+function loadProject(id) {
+  const p = projects.find(x => x.id === id);
+  if (!p) return;
+  project = p;
+  enableNav();
+  updateSidebar();
+  closeModal('modal-open');
+  // Populate setup form
+  document.getElementById('setup-title').value = p.title || '';
+  document.getElementById('setup-desc').value = p.desc || '';
+  document.getElementById('setup-author').value = p.author || '';
+  document.getElementById('setup-company').value = p.company || '';
+  // Load definitions
+  document.getElementById('def-list').innerHTML = '';
+  (p.definitions || []).forEach(d => addDefRow(d.term, d.definition));
+  if (!(p.definitions||[]).length) document.getElementById('def-empty').style.display = 'block';
+  else document.getElementById('def-empty').style.display = 'none';
+  showScreen('review');
+  toast(`Loaded "${p.title}"`, 'ok');
+}
+
+function loadFromFile(evt) {
+  const file = evt.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const p = JSON.parse(e.target.result);
+      if (!p.id) p.id = generateId();
+      if (!p.requirements) p.requirements = [];
+      // Ensure all reqs have uid
+      p.requirements.forEach(r => { if (!r.uid) r.uid = generateId(); });
+      dbSave(p);
+      projects.unshift(p);
+      loadProject(p.id);
+    } catch(err) {
+      toast('Invalid file format.', 'err');
+    }
+  };
+  reader.readAsText(file);
+  evt.target.value = '';
+}
+
+function deleteProject(id) {
+  dbDelete(id);
+  projects = projects.filter(p => p.id !== id);
+  if (project && project.id === id) project = null;
+  renderRecentProjects();
+  openFromFile(); // refresh modal
+  toast('Project removed.', 'ok');
+}
+
+function renderRecentProjects() {
+  const section = document.getElementById('recent-section');
+  const list = document.getElementById('recent-list');
+  if (!projects.length) { section.style.display = 'none'; return; }
+  section.style.display = 'block';
+  list.innerHTML = projects.slice(0, 6).map(p => `
+    <div class="proj-item" onclick="loadProject('${p.id}')">
+      <span class="proj-item-icon">${p.isDraft?'📝':'📋'}</span>
+      <div class="proj-item-info">
+        <div class="proj-item-title">${escHtml(p.title)}</div>
+        <div class="proj-item-meta">${p.requirements.length} requirements · ${p.isDraft?'Draft':('v'+p.currentVersion)} · Modified ${new Date(p.lastModified).toLocaleDateString()}</div>
+      </div>
+      <button class="proj-item-del" onclick="event.stopPropagation();deleteProject('${p.id}')" title="Remove">✕</button>
+    </div>`).join('');
+}
+
+// ============================================================
+// WORD DOCUMENT GENERATOR
+// ============================================================
+async function generateRequirementsDocx(proj) {
+  const zip = new JSZip();
+  const esc = s => (s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+  // Content types
+  zip.file('[Content_Types].xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+  <Default Extension="xml" ContentType="application/xml"/>
+  <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+  <Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>
+  <Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/>
+  <Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/>
+  <Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/>
+</Types>`);
+
+  // Relationships
+  zip.folder('_rels').file('.rels', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
+  <Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/>
+  <Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/>
+</Relationships>`);
+
+  zip.folder('word/_rels').file('document.xml.rels', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
+  <Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/>
+</Relationships>`);
+
+  zip.folder('docProps').file('core.xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <dc:title>${esc(proj.title)} — Product Requirements</dc:title>
+  <dc:creator>${esc(proj.author)}</dc:creator>
+  <cp:lastModifiedBy>${esc(proj.author)}</cp:lastModifiedBy>
+  <cp:revision>1</cp:revision>
+</cp:coreProperties>`);
+
+  zip.folder('docProps').file('app.xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties">
+  <Application>Requirements Documenter</Application>
+</Properties>`);
+
+  zip.folder('word').file('settings.xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:settings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+  <w:defaultTabStop w:val="720"/>
+</w:settings>`);
+
+  // Styles
+  zip.folder('word').file('styles.xml', getWordStyles());
+
+  // Build document body
+  const W = 'xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"';
+  let body = '';
+
+  // Cover page
+  body += wpara('', 'Cover');
+  body += wtitle(esc(proj.title));
+  body += wsubpara('Product Requirements Document', 'Subtitle');
+  body += wsubpara('', 'Normal');
+  body += wkv('Version:', proj.currentVersion ? `v${proj.currentVersion}` : 'Draft', esc);
+  body += wkv('Author:', proj.author, esc);
+  body += wkv('Company:', proj.company, esc);
+  body += wkv('Date:', new Date(proj.lastModified).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}), esc);
+  body += wkv('Status:', proj.isDraft ? 'DRAFT — Not Published' : 'PUBLISHED', esc);
+  body += wpagebreak();
+
+  // Description
+  body += wheading1('1. Product Overview');
+  body += wbody(esc(proj.desc || ''));
+  body += wempty();
+
+  // Definitions
+  if (proj.definitions && proj.definitions.length) {
+    body += wheading1('2. Definitions');
+    body += wtable(
+      ['Term', 'Definition'],
+      proj.definitions.map(d => [esc(d.term), esc(d.definition)]),
+      [2000, 5920]
+    );
+    body += wempty();
+  }
+
+  // Requirements by category
+  const sectionNum = (proj.definitions && proj.definitions.length) ? 3 : 2;
+  body += wheading1(`${sectionNum}. Requirements`);
+  const usedCats = CATEGORIES.filter(c => proj.requirements.some(r => r.category === c));
+  usedCats.forEach((cat, ci) => {
+    const reqs = proj.requirements.filter(r => r.category === cat);
+    body += wheading2(`${sectionNum}.${ci+1} ${catFullName(cat)} Requirements`);
+    body += wtable(
+      ['ID', 'Requirement', 'Priority', 'Status', 'Acceptance Criteria'],
+      reqs.map(r => [
+        esc(r.id),
+        esc(r.text),
+        esc(r.priority),
+        esc(r.status),
+        esc(r.acceptanceCriteria || '—')
+      ]),
+      [800, 3600, 1100, 900, 1500]
+    );
+    body += wempty();
+  });
+
+  // Summary table
+  body += wpagebreak();
+  body += wheading1(`${sectionNum+1}. Requirements Summary`);
+  body += wtable(
+    ['Category', 'Total', 'Must Have', 'Should Have', 'Could Have', "Won't Have", 'Approved'],
+    CATEGORIES.filter(c => proj.requirements.some(r => r.category === c)).map(cat => {
+      const rs = proj.requirements.filter(r => r.category === cat);
+      return [
+        catFullName(cat),
+        String(rs.length),
+        String(rs.filter(r=>r.priority==='Must Have').length),
+        String(rs.filter(r=>r.priority==='Should Have').length),
+        String(rs.filter(r=>r.priority==='Could Have').length),
+        String(rs.filter(r=>r.priority==="Won't Have").length),
+        String(rs.filter(r=>r.status==='Approved').length)
+      ];
+    }),
+    [1600, 600, 900, 1000, 900, 900, 900]
+  );
+
+  // Version history
+  if (proj.versions && proj.versions.length > 1) {
+    body += wempty();
+    body += wheading1(`${sectionNum+2}. Version History`);
+    body += wtable(
+      ['Version', 'Date', 'Requirements', 'Change Notes'],
+      proj.versions.map(v => [
+        `v${v.version}`,
+        new Date(v.date).toLocaleDateString(),
+        String(v.reqCount),
+        esc(v.changeLog || '—')
+      ]),
+      [800, 1200, 900, 5000]
+    );
+  }
+
+  const docXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+  xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+  <w:body>${body}
+    <w:sectPr>
+      <w:pgSz w:w="12240" w:h="15840"/>
+      <w:pgMar w:top="1440" w:right="1080" w:bottom="1440" w:left="1080" w:header="720" w:footer="720"/>
+    </w:sectPr>
+  </w:body>
+</w:document>`;
+
+  zip.folder('word').file('document.xml', docXml);
+  return await zip.generateAsync({ type: 'blob', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+}
+
+async function generateClaudeDocx(proj) {
+  const zip = new JSZip();
+  const esc = s => (s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+  zip.file('[Content_Types].xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+  <Default Extension="xml" ContentType="application/xml"/>
+  <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+  <Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>
+  <Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/>
+</Types>`);
+  zip.folder('_rels').file('.rels', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
+</Relationships>`);
+  zip.folder('word/_rels').file('document.xml.rels', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
+  <Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/>
+</Relationships>`);
+  zip.folder('word').file('settings.xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:settings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:defaultTabStop w:val="720"/></w:settings>`);
+  zip.folder('word').file('styles.xml', getWordStyles());
+
+  let body = '';
+  body += wtitle(esc(`Claude Code Input: ${proj.title}`));
+  body += wsubpara(`v${proj.currentVersion||'Draft'} · ${new Date().toLocaleDateString()} · ${proj.requirements.length} requirements`, 'Subtitle');
+  body += wpagebreak();
+
+  body += wheading1('PROJECT CONTEXT');
+  body += wbody(`You are implementing the ${esc(proj.title)} product. This document provides the complete set of product requirements organized by engineering domain. Implement each requirement as specified, respecting the priority levels (Must Have requirements are mandatory for MVP). Acceptance criteria define the testable conditions for each requirement.`);
+  body += wempty();
+
+  body += wheading1('PRODUCT DESCRIPTION');
+  body += wbody(esc(proj.desc || ''));
+  body += wempty();
+
+  if (proj.definitions && proj.definitions.length) {
+    body += wheading1('DEFINITIONS');
+    proj.definitions.forEach(d => {
+      body += wkv(esc(d.term + ':'), esc(d.definition), s=>s);
+    });
+    body += wempty();
+  }
+
+  // Engineering domain map
+  const domainMap = {
+    Firmware: ['Firmware'],
+    Hardware: ['Hardware'],
+    Software: ['Software','System','Performance','Data'],
+    UX: ['UX'],
+    Network: ['Network'],
+    Security: ['Security'],
+    General: ['General']
+  };
+
+  body += wheading1('REQUIREMENTS BY ENGINEERING DOMAIN');
+
+  const domainOrder = ['Software','UX','Firmware','Hardware','Network','Security','General'];
+  domainOrder.forEach(domain => {
+    const catList = domainMap[domain] || [domain];
+    const reqs = proj.requirements.filter(r => catList.includes(r.category));
+    if (!reqs.length) return;
+
+    body += wheading2(domain.toUpperCase() + ' ENGINEERING');
+
+    const mustHave = reqs.filter(r => r.priority === 'Must Have');
+    const others = reqs.filter(r => r.priority !== 'Must Have');
+
+    if (mustHave.length) {
+      body += wheading3('MUST HAVE (Required for MVP)');
+      mustHave.forEach((r, i) => {
+        body += wnumbered(`[${esc(r.id)}] ${esc(r.text)}`);
+        if (r.acceptanceCriteria) body += wbullet(`Acceptance: ${esc(r.acceptanceCriteria)}`);
+      });
+    }
+    if (others.length) {
+      body += wheading3('ADDITIONAL REQUIREMENTS');
+      others.forEach(r => {
+        body += wnumbered(`[${esc(r.id)}] [${esc(r.priority)}] ${esc(r.text)}`);
+        if (r.acceptanceCriteria) body += wbullet(`Acceptance: ${esc(r.acceptanceCriteria)}`);
+      });
+    }
+    body += wempty();
+  });
+
+  body += wheading1('DEVELOPMENT GUIDELINES');
+  body += wbody('1. Implement all MUST HAVE requirements before any lower-priority items.');
+  body += wbody('2. Each requirement should map to at least one unit test derived from its acceptance criteria.');
+  body += wbody('3. Requirements marked DEFERRED or REJECTED should not be implemented in this version.');
+  body += wbody(`4. This document reflects requirements for version ${proj.currentVersion || 'Draft'}.`);
+  body += wbody('5. Any implementation decisions not covered by requirements should be raised as questions before coding.');
+
+  const docXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+  <w:body>${body}
+    <w:sectPr><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="1440" w:right="1080" w:bottom="1440" w:left="1080" w:header="720" w:footer="720"/></w:sectPr>
+  </w:body>
+</w:document>`;
+
+  zip.folder('word').file('document.xml', docXml);
+  return await zip.generateAsync({ type: 'blob', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+}
+
+// OOXML helpers
+function wns(tag, attrs, content) {
+  const a = attrs ? ' ' + Object.entries(attrs).map(([k,v])=>`w:${k}="${v}"`).join(' ') : '';
+  return content !== undefined ? `<w:${tag}${a}>${content}</w:${tag}>` : `<w:${tag}${a}/>`;
+}
+function wrun(text, opts={}) {
+  const rpr = [opts.bold?'<w:b/><w:bCs/>':'', opts.color?`<w:color w:val="${opts.color}"/>`:'', opts.size?`<w:sz w:val="${opts.size}"/><w:szCs w:val="${opts.size}"/>`:'', opts.italic?'<w:i/>':''].filter(Boolean).join('');
+  return `<w:r>${rpr?`<w:rPr>${rpr}</w:rPr>`:''}<w:t xml:space="preserve">${text}</w:t></w:r>`;
+}
+function wpara(text, style='Normal') {
+  return `<w:p><w:pPr><w:pStyle w:val="${style}"/></w:pPr>${text?wrun(text):''}</w:p>`;
+}
+function wempty() { return `<w:p><w:pPr><w:spacing w:after="0"/></w:pPr></w:p>`; }
+function wpagebreak() { return `<w:p><w:r><w:br w:type="page"/></w:r></w:p>`; }
+function wtitle(text) {
+  return `<w:p><w:pPr><w:pStyle w:val="Title"/><w:jc w:val="center"/></w:pPr>${wrun(text,{})}</w:p>`;
+}
+function wsubpara(text, style) {
+  return `<w:p><w:pPr><w:pStyle w:val="${style||'Subtitle'}"/><w:jc w:val="center"/></w:pPr>${text?wrun(text):''}</w:p>`;
+}
+function wheading1(text) {
+  return `<w:p><w:pPr><w:pStyle w:val="Heading1"/></w:pPr>${wrun(text)}</w:p>`;
+}
+function wheading2(text) {
+  return `<w:p><w:pPr><w:pStyle w:val="Heading2"/></w:pPr>${wrun(text)}</w:p>`;
+}
+function wheading3(text) {
+  return `<w:p><w:pPr><w:pStyle w:val="Heading3"/></w:pPr>${wrun(text)}</w:p>`;
+}
+function wbody(text) {
+  return `<w:p><w:r><w:t xml:space="preserve">${text}</w:t></w:r></w:p>`;
+}
+function wkv(key, val, esc) {
+  return `<w:p><w:r><w:rPr><w:b/></w:rPr><w:t xml:space="preserve">${key} </w:t></w:r><w:r><w:t xml:space="preserve">${val||'—'}</w:t></w:r></w:p>`;
+}
+function wnumbered(text) {
+  return `<w:p><w:pPr><w:ind w:left="360"/></w:pPr><w:r><w:t xml:space="preserve">• ${text}</w:t></w:r></w:p>`;
+}
+function wbullet(text) {
+  return `<w:p><w:pPr><w:ind w:left="720"/></w:pPr><w:r><w:rPr><w:color w:val="374151"/><w:sz w:val="18"/></w:rPr><w:t xml:space="preserve">→ ${text}</w:t></w:r></w:p>`;
+}
+function wtable(headers, rows, colWidths) {
+  const cellStyle = (text, bg, bold=false) => {
+    const bpr = bold ? '<w:rPr><w:b/><w:color w:val="FFFFFF"/><w:sz w:val="18"/></w:rPr>' : '<w:rPr><w:sz w:val="18"/></w:rPr>';
+    return `<w:tc><w:tcPr><w:shd w:val="clear" w:color="auto" w:fill="${bg}"/></w:tcPr><w:p><w:pPr><w:spacing w:before="60" w:after="60"/></w:pPr><w:r>${bpr}<w:t xml:space="preserve">${text}</w:t></w:r></w:p></w:tc>`;
+  };
+  const headerRow = `<w:tr>${headers.map((h,i)=>cellStyle(h,'2563EB',true)).join('')}</w:tr>`;
+  const dataRows = rows.map((row,ri) => {
+    const bg = ri%2===0?'FFFFFF':'F8FAFC';
+    return `<w:tr>${row.map((cell,ci)=>cellStyle(cell,bg,false)).join('')}</w:tr>`;
+  }).join('');
+  return `<w:tbl><w:tblPr><w:tblW w:w="0" w:type="auto"/><w:tblBorders><w:top w:val="single" w:sz="4" w:color="E2E8F0"/><w:left w:val="single" w:sz="4" w:color="E2E8F0"/><w:bottom w:val="single" w:sz="4" w:color="E2E8F0"/><w:right w:val="single" w:sz="4" w:color="E2E8F0"/><w:insideH w:val="single" w:sz="4" w:color="E2E8F0"/><w:insideV w:val="single" w:sz="4" w:color="E2E8F0"/></w:tblBorders></w:tblPr>${headerRow}${dataRows}</w:tbl>`;
+}
+
+function getWordStyles() {
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+  <w:docDefaults><w:rPrDefault><w:rPr>
+    <w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:cs="Calibri"/>
+    <w:sz w:val="22"/><w:szCs w:val="22"/>
+  </w:rPr></w:rPrDefault></w:docDefaults>
+  <w:style w:type="paragraph" w:default="1" w:styleId="Normal">
+    <w:name w:val="Normal"/>
+    <w:pPr><w:spacing w:after="160" w:line="276" w:lineRule="auto"/></w:pPr>
+    <w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri"/><w:sz w:val="22"/></w:rPr>
+  </w:style>
+  <w:style w:type="paragraph" w:styleId="Title">
+    <w:name w:val="Title"/>
+    <w:pPr><w:jc w:val="center"/><w:spacing w:before="480" w:after="160"/></w:pPr>
+    <w:rPr><w:b/><w:color w:val="1E293B"/><w:sz w:val="56"/><w:szCs w:val="56"/></w:rPr>
+  </w:style>
+  <w:style w:type="paragraph" w:styleId="Subtitle">
+    <w:name w:val="Subtitle"/>
+    <w:pPr><w:jc w:val="center"/><w:spacing w:after="80"/></w:pPr>
+    <w:rPr><w:color w:val="64748B"/><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr>
+  </w:style>
+  <w:style w:type="paragraph" w:styleId="Cover">
+    <w:name w:val="Cover"/>
+    <w:pPr><w:spacing w:before="2880" w:after="0"/></w:pPr>
+  </w:style>
+  <w:style w:type="paragraph" w:styleId="Heading1">
+    <w:name w:val="heading 1"/>
+    <w:pPr>
+      <w:spacing w:before="360" w:after="120"/>
+      <w:pBdr><w:bottom w:val="single" w:sz="8" w:space="4" w:color="2563EB"/></w:pBdr>
+    </w:pPr>
+    <w:rPr><w:b/><w:bCs/><w:color w:val="1E293B"/><w:sz w:val="36"/><w:szCs w:val="36"/></w:rPr>
+  </w:style>
+  <w:style w:type="paragraph" w:styleId="Heading2">
+    <w:name w:val="heading 2"/>
+    <w:pPr><w:spacing w:before="280" w:after="80"/></w:pPr>
+    <w:rPr><w:b/><w:bCs/><w:color w:val="2563EB"/><w:sz w:val="28"/><w:szCs w:val="28"/></w:rPr>
+  </w:style>
+  <w:style w:type="paragraph" w:styleId="Heading3">
+    <w:name w:val="heading 3"/>
+    <w:pPr><w:spacing w:before="200" w:after="60"/></w:pPr>
+    <w:rPr><w:b/><w:bCs/><w:color w:val="374151"/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr>
+  </w:style>
+</w:styles>`;
+}
+
+// ============================================================
+// EXCEL GENERATOR
+// ============================================================
+function generateExcel(proj) {
+  const wb = XLSX.utils.book_new();
+
+  // Main sheet
+  const sorted = [...proj.requirements].sort((a,b) => {
+    const ci = CATEGORIES.indexOf(a.category) - CATEGORIES.indexOf(b.category);
+    if (ci !== 0) return ci;
+    return PRIORITIES.indexOf(a.priority) - PRIORITIES.indexOf(b.priority);
+  });
+
+  const reqData = [['ID','Category','Priority','Status','Requirement','Acceptance Criteria','Author','Date Added']];
+  sorted.forEach(r => reqData.push([
+    r.id, r.category, r.priority, r.status, r.text,
+    r.acceptanceCriteria || '', r.author || '',
+    r.dateAdded ? new Date(r.dateAdded).toLocaleDateString() : ''
+  ]));
+
+  const ws = XLSX.utils.aoa_to_sheet(reqData);
+  ws['!cols'] = [{wch:10},{wch:13},{wch:14},{wch:11},{wch:70},{wch:45},{wch:15},{wch:12}];
+  XLSX.utils.book_append_sheet(wb, ws, 'Requirements');
+
+  // Summary sheet
+  const sumData = [['Category','Total','Must Have','Should Have','Could Have',"Won't Have",'Approved','Deferred']];
+  CATEGORIES.filter(c => proj.requirements.some(r=>r.category===c)).forEach(cat => {
+    const rs = proj.requirements.filter(r=>r.category===cat);
+    sumData.push([cat, rs.length,
+      rs.filter(r=>r.priority==='Must Have').length,
+      rs.filter(r=>r.priority==='Should Have').length,
+      rs.filter(r=>r.priority==='Could Have').length,
+      rs.filter(r=>r.priority==="Won't Have").length,
+      rs.filter(r=>r.status==='Approved').length,
+      rs.filter(r=>r.status==='Deferred').length
+    ]);
+  });
+  const ws2 = XLSX.utils.aoa_to_sheet(sumData);
+  ws2['!cols'] = [{wch:14},{wch:7},{wch:11},{wch:13},{wch:11},{wch:11},{wch:10},{wch:10}];
+  XLSX.utils.book_append_sheet(wb, ws2, 'Summary');
+
+  // Version history sheet
+  if (proj.versions && proj.versions.length) {
+    const verData = [['Version','Date','Requirement Count','Change Notes']];
+    proj.versions.forEach(v => verData.push([
+      `v${v.version}`, new Date(v.date).toLocaleDateString(), v.reqCount, v.changeLog || ''
+    ]));
+    const ws3 = XLSX.utils.aoa_to_sheet(verData);
+    ws3['!cols'] = [{wch:10},{wch:12},{wch:20},{wch:60}];
+    XLSX.utils.book_append_sheet(wb, ws3, 'Version History');
+  }
+
+  return XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function catFullName(cat) {
+  const names = {UX:'User Experience (UX/UI)',System:'System',Hardware:'Hardware',Firmware:'Firmware',Software:'Software',Network:'Network & Connectivity',Security:'Security',Performance:'Performance',Data:'Data & Storage',General:'General'};
+  return names[cat] || cat;
+}
+
+function priPillClass(p) {
+  if (p==='Must Have') return 'pill-must';
+  if (p==='Should Have') return 'pill-should';
+  if (p==='Could Have') return 'pill-could';
+  return 'pill-wont';
+}
+
+function staPillClass(s) {
+  const m = {Draft:'pill-draft',Approved:'pill-approved',Deferred:'pill-deferred',Rejected:'pill-rejected'};
+  return m[s] || 'pill-draft';
+}
+
+function escHtml(s) {
+  return (s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
+}
+
+function toast(msg, type='info') {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type==='ok'?'ok':type==='err'?'err':'info'}`;
+  el.innerHTML = `<span>${type==='ok'?'✓':type==='err'?'✕':'ℹ'}</span> ${escHtml(msg)}`;
+  wrap.appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .4s'; setTimeout(()=>el.remove(),400); }, 3500);
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function populateCatSelects() {
+  const opts = CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('');
+  document.getElementById('edit-category').innerHTML = opts;
+  document.getElementById('entry-cat-override').innerHTML = opts;
+}
+
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+  if ((e.ctrlKey||e.metaKey) && e.key==='s') { e.preventDefault(); saveDraft(); }
+  if ((e.ctrlKey||e.metaKey) && e.key==='Enter') {
+    const screen = document.querySelector('.screen.active')?.id;
+    if (screen === 'screen-entry') addRequirement();
+  }
+});
+</script>
+</body>
+</html>

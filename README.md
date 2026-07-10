@@ -104,10 +104,11 @@ Against `Diothas_Web-claude.md` v1.0 (22 requirements).
 
 | | |
 |---|---|
-| **Implemented** | SW-001 – SW-005, SW-008, SW-009, SW-010, SW-014, SW-015, SW-016, SW-019, SW-020, SW-022 |
+| **Implemented** | SW-001 – SW-005, SW-008, SW-009, SW-010, SW-014, SW-015, SW-019, SW-020, SW-022 |
 | **Dropped by the owner** | SW-006 (Word input), SW-011 / SW-012 / SW-013 (comments), SW-017 (admin page), SW-021 (subscribe) |
 | **Superseded by the design** | SW-007 — three-across with horizontal scroll became the featured card plus a numbered list |
 | **Amended** | SW-009 — content lives in the repo, not on the host, so it is versioned and revertible. A folder name is the URL slug; the title comes from front matter, because SW-009's "folder name is the title" cannot express a colon on Windows. |
+| | SW-016 — "each Workshop page links to its web service" holds only for hosted services. ReqDoc is a file you download, not a service; Wi-Fi Validator is unreleased and links to nothing. `liveUrl` therefore accepts a URL, a filename in the app's folder, or nothing at all when the app is `IN DEVELOPMENT`. |
 | **Knowingly unmet** | SW-018 — hero content stays in `cms/hero.xml` rather than a `HERO` folder |
 
 SW-008 asks for a "100 word summary" on each Workshop card. The design gives that

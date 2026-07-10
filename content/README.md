@@ -64,16 +64,16 @@ Create `content/workshop/<slug>/index.md`:
 
 ```markdown
 ---
-name: Atlas
-subtitle: Geospatial primitives as a service — one clean API.
-status: IN DEVELOPMENT     # LIVE | BETA | IN DEVELOPMENT — exactly these three
-tags: API · SERVICE
-liveUrl: https://atlas.example.com   # required; every app links to its service
-liveLabel: Join the waitlist
+name: Air Savvy
+subtitle: Airline fare price tracker.
+status: BETA               # LIVE | BETA | IN DEVELOPMENT — exactly these three
+tags: WEB · SERVICE
+liveUrl: https://air-savvy.com
+liveLabel: Start tracking flights
 icon: icon.png             # optional — omit and you get the monogram tile
 monogram: A                # the letter shown when there is no icon
 variant: gold              # cyan | gold — the monogram tile's colour
-order: 4                   # optional; otherwise alphabetical
+order: 1                   # optional; otherwise alphabetical
 summary: >
   The card description on the home page.
 draft: false
@@ -82,6 +82,23 @@ draft: false
 
 `status` is matched exactly against those three strings. `SOON` and `WIP` are
 not statuses and will stop the build rather than quietly render as `LIVE`.
+
+### `liveUrl` takes three forms
+
+Not every application is a hosted service, so the link is not always a link.
+
+| Front matter | What renders |
+|---|---|
+| `liveUrl: https://air-savvy.com` | A button opening the service in a new tab, marked `↗` |
+| `liveUrl: ReqDoc.html` | A **download** button, marked `↓`, for a file in the same folder |
+| *omitted* | No button at all — allowed **only** when `status: IN DEVELOPMENT` |
+
+A bare filename must name a file that actually exists in the app's folder, or
+the build stops. A path like `/downloads/thing.html` is rejected — put the file
+next to `index.md` and name it directly.
+
+Omitting `liveUrl` on a `LIVE` or `BETA` app is an error. A released app that
+links to nothing is nearly always a mistake rather than a decision.
 
 **Give every app page the same spine.** SW-014 asks these pages to cover the
 function *and the development* of the application, and SW-002 says the whole

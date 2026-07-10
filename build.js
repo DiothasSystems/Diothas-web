@@ -229,9 +229,9 @@ const FRONT_MATTER = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/;
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 const STATUSES = {
-  'LIVE': { label: 'LIVE', cls: 'pill--live' },
-  'BETA': { label: 'BETA', cls: 'pill--beta' },
-  'IN DEVELOPMENT': { label: 'IN DEVELOPMENT', cls: 'pill--dev' },
+  'LIVE': { key: 'LIVE', label: 'LIVE', cls: 'pill--live' },
+  'BETA': { key: 'BETA', label: 'BETA', cls: 'pill--beta' },
+  'IN DEVELOPMENT': { key: 'IN DEVELOPMENT', label: 'IN DEVELOPMENT', cls: 'pill--dev' },
 };
 
 function readItems(kind) {
@@ -297,20 +297,49 @@ function readItems(kind) {
     } else {
       item.name = String(meta.name || '').trim();
       item.tags = String(meta.tags || '').trim();
-      item.liveUrl = String(meta.liveUrl || '').trim();
-      item.liveLabel = String(meta.liveLabel || 'Launch application').trim();
       item.monogram = String(meta.monogram || item.name.charAt(0) || '?').trim().charAt(0).toUpperCase();
       item.variant = meta.variant === 'gold' ? 'gold' : 'cyan';
       item.order = Number.isFinite(Number(meta.order)) ? Number(meta.order) : 999;
 
       if (!item.name) fail(where, 'front matter needs a `name`');
-      if (!item.liveUrl) fail(where, 'front matter needs a `liveUrl` — every Workshop page links to its running service');
-      else if (!/^https?:\/\//.test(item.liveUrl)) fail(where, `liveUrl "${item.liveUrl}" must be an absolute http(s) URL`);
 
       const key = String(meta.status || '').trim().toUpperCase().replace(/[-_]+/g, ' ');
       const status = STATUSES[key];
       if (!status) fail(where, `status "${meta.status}" is not one of: LIVE, BETA, IN DEVELOPMENT`);
       item.status = status || STATUSES.LIVE;
+
+      /**
+       * SW-016 says every Workshop page links to its running service. Two of the
+       * apps break that as written, so the rule is amended rather than met:
+       *
+       *   liveUrl: https://…      a hosted service — opens in a new tab
+       *   liveUrl: ReqDoc.html    a file in this folder — renders a download button
+       *   liveUrl omitted         allowed only for IN DEVELOPMENT, because an
+       *                           unreleased app has nothing to link to
+       */
+      const live = String(meta.liveUrl || '').trim();
+      item.liveLabel = String(meta.liveLabel || '').trim();
+      item.isDownload = false;
+      item.liveUrl = '';
+
+      if (!live) {
+        if (item.status.key !== 'IN DEVELOPMENT') {
+          fail(where, 'front matter needs a `liveUrl` — only an IN DEVELOPMENT app may omit it');
+        }
+      } else if (/^https?:\/\//.test(live)) {
+        item.liveUrl = live;
+        item.liveLabel = item.liveLabel || 'Launch application';
+      } else if (live.startsWith('/') || live.includes('://')) {
+        fail(where, `liveUrl "${live}" must be an absolute http(s) URL, or the name of a file in this folder`);
+      } else {
+        if (!fs.existsSync(path.join(dir, live))) {
+          fail(where, `liveUrl "${live}" names a file that is not in this folder`);
+        }
+        item.liveUrl = `/${kind}/${slug}/${live}`;
+        item.downloadName = live;
+        item.isDownload = true;
+        item.liveLabel = item.liveLabel || 'Download';
+      }
     }
 
     items.push(item);
@@ -630,6 +659,19 @@ ${a.body}
 function appPage(cms, app) {
   const { site, footer } = cms;
 
+  // A download stays on-origin and must not open a tab; a coming-soon app has
+  // no link at all, so it gets no primary button rather than a dead one.
+  const primaryCta = !app.liveUrl ? ''
+    : app.isDownload
+      ? `<a class="btn-primary" href="${esc(app.liveUrl)}" download="${esc(app.downloadName)}">${esc(app.liveLabel)} <span>↓</span></a>`
+      : `<a class="btn-primary" href="${esc(app.liveUrl)}" target="_blank" rel="noopener">${esc(app.liveLabel)} <span>↗</span></a>`;
+
+  const footCta = !app.liveUrl
+    ? `<span class="docnav__side">Not yet released — <a href="mailto:${esc(site.contactEmail)}">ask to be told when it is</a></span>`
+    : app.isDownload
+      ? `<a class="docnav__live" href="${esc(app.liveUrl)}" download="${esc(app.downloadName)}">${esc(app.liveLabel)} ↓</a>`
+      : `<a class="docnav__live" href="${esc(app.liveUrl)}" target="_blank" rel="noopener">${esc(app.liveLabel)} ↗</a>`;
+
   const body = `<div class="shell">
   ${nav(site, false)}
 
@@ -646,7 +688,7 @@ function appPage(cms, app) {
           ${app.subtitle ? `<p class="apphead__sub">${esc(app.subtitle)}</p>` : ''}
           <div class="apphead__tags">${esc(app.tags)}</div>
           <div class="apphead__ctas">
-            <a class="btn-primary" href="${esc(app.liveUrl)}" target="_blank" rel="noopener">${esc(app.liveLabel)} <span>↗</span></a>
+            ${primaryCta}
             <a class="btn-ghost" href="${esc(site.cta.href)}">${esc(site.cta.label)}</a>
           </div>
         </div>
@@ -665,7 +707,7 @@ ${app.body}
 
     <div class="docnav">
       <a class="btn-ghost" href="/workshop/">← Back to the Workshop</a>
-      <a class="docnav__live" href="${esc(app.liveUrl)}" target="_blank" rel="noopener">${esc(app.liveLabel)} ↗</a>
+      ${footCta}
     </div>
   </article>
 
