@@ -20,9 +20,12 @@ jobs:
     env:
       FTP_SERVER: ${{ secrets.FTP_SERVER }}
     steps:
-      - uses: actions/checkout@v4
+      # checkout@v7 and setup-node@v6 run on node24. The v4 lines ran on node20,
+      # which GitHub deprecated. node-version below is the Node the *build* uses,
+      # and is unrelated to the runtime the actions themselves run on.
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: '22'
           cache: npm
