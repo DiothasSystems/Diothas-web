@@ -20,11 +20,8 @@
     <item><field key="text">Diothas Systems is a collection of perspectives on product leadership, artificial intelligence, and the technologies shaping tomorrow.</field></item>
     <item><field key="text">In Perspectives, explore insights on strategy, innovation, and the evolving craft of creating products in an AI-powered world.</field></item>
     <item><field key="text">In The Workshop, those ideas take form through web applications, mobile experiences, and experimental services that transform concepts into practical solutions.</field></item>
-    <item><field key="text">Like the great inventors of the steam age, we believe the future belongs to those who imagine boldly, build deliberately, and never stop exploring what lies beyond the horizon.</field></item>
+    <item><field key="text">Like the great inventors of the steam age, we believe the future belongs to those who never stop exploring what lies beyond the horizon.</field></item>
   </list>
 
-  <list key="closingLines">
-    <item><field key="text">So step into the workshop.</field></item>
-    <item><field key="text">Wind the mechanism.</field></item>
-  </list>
+  <list key="closingLines"></list>
 </section>

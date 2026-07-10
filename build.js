@@ -518,9 +518,9 @@ function homePage(cms, perspectives, workshop) {
         <h1 class="hero__title">${esc(hero.title)}</h1>
         <p class="hero__subtitle">${esc(hero.subtitle)}</p>
         ${(hero.paragraphs || []).map((x) => `<p class="hero__p">${esc(x.text)}</p>`).join('\n        ')}
-        <div class="hero__closing">
-          ${(hero.closingLines || []).map((x) => `<p>${esc(x.text)}</p>`).join('\n          ')}
-        </div>
+        ${(hero.closingLines && hero.closingLines.length) ? `<div class="hero__closing">
+          ${hero.closingLines.map((x) => `<p>${esc(x.text)}</p>`).join('\n          ')}
+        </div>` : ''}
         <div class="hero__ctas">
           <a class="btn-primary" href="${esc(hero.primaryCta.href)}">${esc(hero.primaryCta.label)} <span>→</span></a>
           <a class="btn-ghost" href="${esc(hero.secondaryCta.href)}">${esc(hero.secondaryCta.label)}</a>

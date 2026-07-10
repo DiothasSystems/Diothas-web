@@ -112,9 +112,9 @@ img { max-width: 100%; }
 .hero { position: relative; min-height: 84vh; display: flex; align-items: center; overflow: hidden; border-bottom: 1px solid var(--hair-brass-soft); }
 .hero__bg {
   position: absolute; inset: 0;
-  background-size: 312% auto; background-repeat: no-repeat; background-position: right center;
+  background-size: auto 100%; background-repeat: no-repeat; background-position: right center;
   will-change: background-position;
-  animation: slowPan 90s ease-in-out infinite alternate;
+  animation: slowPan 180s ease-in-out infinite alternate;
 }
 .hero__scrim-a { position: absolute; inset: 0; background: linear-gradient(95deg, #18242f 0%, #18242f 24%, rgba(24,36,47,0.74) 52%, rgba(24,36,47,0.30) 100%); }
 .hero__scrim-b { position: absolute; inset: 0; background: linear-gradient(0deg, #18242f 4%, transparent 30%, transparent 72%, #18242f 98%); }
