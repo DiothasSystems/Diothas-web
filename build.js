@@ -23,7 +23,9 @@ const yaml = require('js-yaml');
 const { XMLParser } = require('fast-xml-parser');
 
 const ROOT = __dirname;
-const OUT = path.join(ROOT, 'dist');
+// DIST_DIR lets you build outside OneDrive, which holds handles on synced
+// folders. See emptyDir() below.
+const OUT = process.env.DIST_DIR ? path.resolve(process.env.DIST_DIR) : path.join(ROOT, 'dist');
 
 const md = new MarkdownIt({ html: false, linkify: true, typographer: true });
 
@@ -68,8 +70,21 @@ const isoDate = (d) => d.toISOString().slice(0, 10);
 
 const titleCase = (s) => String(s).toLowerCase().replace(/\b[a-z]/g, (c) => c.toUpperCase());
 
-const rmrf = (p) => fs.rmSync(p, { recursive: true, force: true });
+const rmrf = (p) => fs.rmSync(p, { recursive: true, force: true, maxRetries: 5, retryDelay: 120 });
 const mkdirp = (p) => fs.mkdirSync(p, { recursive: true });
+
+/**
+ * Clear the output directory without removing the directory itself.
+ *
+ * This project lives inside OneDrive, which converts synced folders into
+ * reparse points and keeps a handle on them. Deleting dist/ outright fails
+ * with EPERM even when nothing of ours is running. Emptying it works, because
+ * the handle is on the directory, not its children.
+ */
+function emptyDir(p) {
+  if (!fs.existsSync(p)) { mkdirp(p); return; }
+  for (const entry of fs.readdirSync(p)) rmrf(path.join(p, entry));
+}
 
 function writeFile(rel, contents) {
   const full = path.join(OUT, rel);
@@ -779,8 +794,7 @@ function build() {
     process.exit(1);
   }
 
-  rmrf(OUT);
-  mkdirp(OUT);
+  emptyDir(OUT);
 
   copyDir(path.join(ROOT, 'uploads'), path.join(OUT, 'uploads'));
   copyDir(path.join(ROOT, 'assets'), path.join(OUT, 'assets'));

@@ -12,7 +12,7 @@ const path = require('path');
 const fs = require('fs');
 const express = require('express');
 
-const DIST = path.join(__dirname, 'dist');
+const DIST = process.env.DIST_DIR ? path.resolve(process.env.DIST_DIR) : path.join(__dirname, 'dist');
 const PORT = process.env.PORT || 8080;
 
 if (!fs.existsSync(DIST)) {
