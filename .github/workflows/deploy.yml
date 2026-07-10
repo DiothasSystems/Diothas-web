@@ -15,6 +15,10 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Hoisted so the deploy step can test whether the secrets exist. The
+    # `secrets` context is not usable in every `if:`; the `env` context is.
+    env:
+      FTP_SERVER: ${{ secrets.FTP_SERVER }}
     steps:
       - uses: actions/checkout@v4
 
@@ -30,9 +34,16 @@ jobs:
       - name: Build
         run: npm run build
 
+      # Until the FTP secrets exist, the build alone is the whole job. Without
+      # this guard the first push to a fresh repo fails on empty credentials.
+      - name: Deploy skipped — no FTP credentials
+        if: github.event_name != 'pull_request' && env.FTP_SERVER == ''
+        run: |
+          echo "::warning::Built successfully but did not deploy. Add FTP_SERVER, FTP_USERNAME and FTP_PASSWORD under Settings → Secrets and variables → Actions, then re-run this workflow."
+
       # Pull requests stop here: the build is the test.
       - name: Deploy via FTPS
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && env.FTP_SERVER != ''
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
