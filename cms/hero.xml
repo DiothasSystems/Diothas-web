@@ -14,7 +14,7 @@
   <link key="primaryCta" href="#writing">Read the Perspectives</link>
   <link key="secondaryCta" href="#work">See the workshop</link>
 
-  <image key="backdrop" src="uploads/DiothasBanner.png" alt="Steampunk cityscape banner"/>
+  <image key="backdrop" src="uploads/DiothasBanner.jpg" alt="Steampunk cityscape banner"/>
 
   <list key="paragraphs">
     <item><field key="text">Diothas Systems is a collection of perspectives on product leadership, artificial intelligence, and the technologies shaping tomorrow.</field></item>
