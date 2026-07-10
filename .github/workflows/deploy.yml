@@ -44,7 +44,8 @@ jobs:
       # Pull requests stop here: the build is the test.
       - name: Deploy via FTPS
         if: github.event_name != 'pull_request' && env.FTP_SERVER != ''
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        # v4.4.0 runs on node24. v4.3.5 declared node20, which GitHub deprecated.
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
