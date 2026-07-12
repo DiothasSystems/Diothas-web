@@ -9,7 +9,7 @@ summary: >
   Interviews measure the intercept — what someone knows on the day you meet
   them. Careers are governed by the slope. Here's how to interview for the
   derivative instead of the value.
-draft: false
+draft: true
 ---
 
 Every interview loop is a measurement of the intercept: what does this person know, right now, on a Tuesday, under artificial pressure. It is the easiest thing to measure and the least predictive thing you can know.

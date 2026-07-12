@@ -9,7 +9,7 @@ summary: >
   Treating a roadmap as a commitment converts every piece of new information
   into a threat. Treating it as a portfolio of bets converts the same
   information into a return.
-draft: false
+draft: true
 ---
 
 A roadmap presented as a plan invites exactly one question: *will you hit it?* A roadmap presented as a portfolio of bets invites a better one: *what would have to be true?*

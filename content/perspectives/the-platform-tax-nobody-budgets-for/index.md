@@ -9,7 +9,7 @@ summary: >
   A platform team that cannot say no is not a platform team — it's a shared
   services pool with better branding. The tax comes due either way; the only
   question is whether you priced it.
-draft: false
+draft: true
 ---
 
 Platforms are sold internally as leverage: build it once, every product team goes faster. The pitch is true and incomplete. What it omits is that every abstraction you introduce is a loan taken against future clarity, and the interest is paid by whoever debugs the system at 3am.

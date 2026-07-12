@@ -9,7 +9,7 @@ summary: >
   Conway's Law isn't a warning — it's a design tool. How to draw team
   boundaries that produce the system you actually want, instead of the one
   your reporting lines accidentally encode.
-draft: false
+draft: true
 ---
 
 Every system your organization ships is a mirror. Look closely at its seams — the APIs, the handoffs, the places where two services meet awkwardly — and you will find the outline of your org chart, reflected back with unsettling fidelity.

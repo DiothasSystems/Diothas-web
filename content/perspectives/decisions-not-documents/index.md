@@ -9,7 +9,7 @@ summary: >
   A standup is a lossy broadcast of state that was already written down
   somewhere. Replace the ritual with a durable decision log and the
   organization starts running at the speed people can read.
-draft: false
+draft: true
 ---
 
 The daily standup is a meeting where everyone reports state that a system already knows, to an audience that will forget it before lunch. It survives because it feels like coordination. It is mostly memory synchronization, performed at the speed of the slowest talker.

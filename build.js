@@ -456,38 +456,44 @@ function homePage(cms, perspectives, workshop) {
   const p = cms.perspectives;
   const w = cms.workshop;
 
-  const featured = perspectives[0];
-  const rest = perspectives.slice(1, 5);
-
   const themes = [];
   for (const a of perspectives) if (!themes.includes(a.category)) themes.push(a.category);
 
-  const featuredHtml = featured ? `
-        <a class="featured" href="${esc(featured.url)}">
-          <div class="featured__panel">
-            <img src="${esc(featured.iconUrl)}" alt="">
+  // Every perspective gets the same "Looking Far Ahead"-style box; they live in
+  // a horizontal snap-scroller — 3 across on desktop, 1 across on mobile — so the
+  // row simply scrolls as more perspectives are published.
+  const realCards = perspectives.map((a) => `
+        <a class="pcard" href="${esc(a.url)}">
+          <div class="pcard__panel">
+            <img src="${esc(a.iconUrl)}" alt="">
             <div class="featured__vignette"></div>
-            <span class="featured__badge">FEATURED</span>
           </div>
-          <div class="featured__body">
-            <div class="cat">${esc(featured.category)}</div>
-            <h3 class="featured__title">${esc(featured.title)}</h3>
-            <p class="featured__excerpt">${esc(featured.summary)}</p>
+          <div class="pcard__body">
+            <div class="cat">${esc(a.category)}</div>
+            <h3 class="pcard__title">${esc(a.title)}</h3>
+            <p class="pcard__excerpt">${esc(a.summary)}</p>
             <div class="meta">
-              <span>${featured.readTime} MIN READ</span><span class="meta__dot">·</span><span>${monthYear(featured.date)}</span>
+              <span>${a.readTime} MIN READ</span><span class="meta__dot">·</span><span>${monthYear(a.date)}</span>
             </div>
           </div>
-        </a>` : '<p class="featured__excerpt">No perspectives published yet.</p>';
+        </a>`);
 
-  const posts = rest.map((a, i) => `
-            <a class="postrow" href="${esc(a.url)}">
-              <span class="postrow__num">${String(i + 2).padStart(2, '0')}</span>
-              <div>
-                <div class="postrow__cat">${esc(a.category)}</div>
-                <h4 class="postrow__title">${esc(a.title)}</h4>
-                <div class="postrow__read">${a.readTime} MIN READ</div>
-              </div>
-            </a>`).join('');
+  // Keep at least three slots filled: real perspectives first, then "forthcoming"
+  // placeholders. Once a fourth real perspective lands, the placeholders vanish
+  // and the slider arrows appear (see showPerspArrows).
+  const placeholderCards = Array.from({ length: Math.max(0, 3 - perspectives.length) }, () => `
+        <div class="pcard pcard--soon">
+          <div class="pcard__panel pcard__panel--soon"><span class="pcard__diamond">◆</span></div>
+          <div class="pcard__body">
+            <div class="cat">FORTHCOMING</div>
+            <h3 class="pcard__title">A new perspective is taking shape</h3>
+            <p class="pcard__excerpt">The next essay is on the workbench. Check back soon.</p>
+            <div class="meta"><span>COMING SOON</span></div>
+          </div>
+        </div>`);
+
+  const perspCards = [...realCards, ...placeholderCards].join('');
+  const showPerspArrows = perspectives.length > 3;
 
   const cards = workshop.map((app) => `
           <a class="card" href="${esc(app.url)}">
@@ -538,10 +544,11 @@ function homePage(cms, perspectives, workshop) {
       <a class="viewall" href="/perspectives/">${esc(p.viewAll.label)}</a>
     </div>
 
-    <div class="persp-grid">
-      ${featuredHtml}
-      <div class="postlist">${posts}
+    <div class="persp-scrollwrap${showPerspArrows ? ' persp-scrollwrap--arrows' : ''}">
+      ${showPerspArrows ? `<button class="persp-arrow persp-arrow--prev" data-persp-arrow="prev" aria-label="Previous perspectives">‹</button>` : ''}
+      <div class="persp-scroller" id="perspScroller">${perspCards}
       </div>
+      ${showPerspArrows ? `<button class="persp-arrow persp-arrow--next" data-persp-arrow="next" aria-label="More perspectives">›</button>` : ''}
     </div>
 
     <div class="themes">
@@ -551,6 +558,17 @@ function homePage(cms, perspectives, workshop) {
       </div>
     </div>
   </section>
+  ${showPerspArrows ? `<script>
+(function(){
+  var s=document.getElementById('perspScroller');
+  if(!s)return;
+  var a=document.querySelectorAll('[data-persp-arrow]');
+  function pagew(){return Math.max(s.clientWidth*0.9,260);}
+  function sync(){var m=s.scrollWidth-s.clientWidth-2;a.forEach(function(b){var n=b.getAttribute('data-persp-arrow')==='next';b.disabled=n?s.scrollLeft>=m:s.scrollLeft<=2;});}
+  a.forEach(function(b){b.addEventListener('click',function(){s.scrollBy({left:(b.getAttribute('data-persp-arrow')==='next'?1:-1)*pagew(),behavior:'smooth'});});});
+  s.addEventListener('scroll',sync);window.addEventListener('resize',sync);sync();
+})();
+</script>` : ''}
 
   <section class="band" id="work">
     <div class="wide section">
@@ -615,7 +633,10 @@ function articlePage(cms, a) {
 
   <header class="dochead">
     <div class="dochead__inner">
-      <a class="backlink" href="/perspectives/">← ALL PERSPECTIVES</a>
+      <div class="dochead__nav">
+        <a class="backlink" href="/perspectives/">← ALL PERSPECTIVES</a>
+        <a class="backlink" href="/">⌂ BACK TO FUTURE</a>
+      </div>
       <div class="arthead__row">
         <img class="arthead__icon" src="${esc(a.iconUrl)}" alt="">
         <div style="padding-top:4px">
@@ -640,7 +661,10 @@ ${a.body}
     </div>
 
     <div class="docnav">
-      <a class="btn-ghost" href="/perspectives/">← More Perspectives</a>
+      <div class="docnav__btns">
+        <a class="btn-ghost" href="/perspectives/">← More Perspectives</a>
+        <a class="btn-ghost" href="/">⌂ Back to Future</a>
+      </div>
       <a class="docnav__side" href="mailto:${esc(site.contactEmail)}">${esc(site.contactEmail)}</a>
     </div>
   </article>
