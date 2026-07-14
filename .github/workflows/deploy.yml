@@ -55,6 +55,9 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
           port: 21
+          # Hostinger's control socket is occasionally slow to answer; the
+          # action's 30s default can time out. Give it 2 minutes of headroom.
+          timeout: 120000
           local-dir: ./dist/
           server-dir: ${{ vars.FTP_REMOTE_DIR || '/public_html/' }}
           # Incremental. The action keeps a manifest on the server and uploads
