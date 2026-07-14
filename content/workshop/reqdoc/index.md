@@ -15,37 +15,7 @@ summary: >
 draft: false
 ---
 
-ReqDoc is a single HTML file. You download it, open it in a browser, and it is the whole application — there is nothing to install, no account to create, and no server holding your product plans.
-
-## What it does
-
-**Set up the product.** A title, a company, a description, and a glossary of definitions that travels with the document.
-
-**Add requirements one at a time.** Each one takes a statement, an acceptance criterion, a requester, a priority, and a domain. ReqDoc reads the statement and proposes the domain itself — a requirement mentioning *firmware* or *TLS* or *latency* lands in Firmware, Security, or Performance without being told. You can override it.
-
-The ten domains are UX, System, Hardware, Firmware, Software, Network, Security, Performance, Data, and General. Priorities are MoSCoW: **Must Have**, **Should Have**, **Could Have**, **Won't Have**.
-
-**Review the register.** Search the whole set, filter by domain or priority, and see at a glance how many requirements exist, how many are Must Have, and how many domains the product actually touches.
-
-**Publish.** ReqDoc computes the next version number, diffs the register against the last published snapshot to show you exactly what changed, takes a changelog, and then generates three files:
-
-- a **Word requirements document**, organized by domain
-- an **Excel workbook** of the full register
-- a **Claude Code build brief**, so the spec can be handed to an AI coding agent rather than retyped into a prompt
-
-Drafts save and reopen as JSON. Where the browser supports it, *Set Save Location* writes those files straight into a folder you choose, instead of trickling through the downloads bar.
-
-![ReqDoc requirements register](<> "Add a screenshot of the review screen to this folder and reference it here.")
-
-## Why it exists
-
-The requirements document is the least loved artifact in product management, and the reason is structural: the work of writing one is clerical, but the cost of writing a bad one is architectural. Teams build what the document says, including the parts it says by accident.
-
-ReqDoc attacks the clerical half so that attention is left for the other. Domain sorting, version numbering, change detection, and three export formats are all mechanical work that software should be doing. What remains for the product manager is the only part that was ever hard: deciding what the system must do, and how you will know it did.
-
-The single-file form is the point. A product manager should be able to write a spec on a laptop in an airport, hand the file to somebody, and have it open. No login screen stands between an idea and the document.
-
-> Where PrismPRD is the cloud, ReqDoc is the file.
+ReqDoc is a single HTML file. You download it, open it in a browser, and it *is* the whole application — no install, no account, no server. Enter requirements one at a time, let it sort them by domain and MoSCoW priority, then publish a Word document, an Excel workbook, and a Claude Code build brief. Grab it from the button above to use it; this page is about how it was built.
 
 ## How it was built
 

@@ -14,31 +14,7 @@ summary: >
 draft: false
 ---
 
-Everyone knows which room the Wi-Fi is bad in. Almost nobody knows *why*, or what to buy to fix it. Wi-Fi Validator turns a vague household complaint into a measurement, a grade, and a specific thing to do about it.
-
-## What it does
-
-You walk your home, room by room. In each one you stand in the middle, run a short signal test, and the app scores the bands it can see and awards the room a grade from **A** to **F**, derived from live signal strength rather than a guess.
-
-Four steps, in order:
-
-**Onboard.** Accept the licence, set up the home. Decline and the app exits — there is no anonymous mode collecting data in the background, because there is no data collection at all.
-
-**Validate.** Pick a floor and a room, stand in the centre, test. Repeat. At least four rooms, up to twelve.
-
-**Review.** A coverage table and a two-dimensional floor-plan map showing where the signal actually goes, which is rarely where people assume it does.
-
-**Act.** Weak rooms produce an extender recommendation with installation help, and the whole report can be emailed to yourself as a styled document.
-
-Nothing syncs. Everything — settings, results, history — lives on the device. The email address you send the report to is used once and never stored.
-
-![Room grade and floor-plan coverage map](<> "Add a screenshot of the review screen to this folder and reference it here.")
-
-## Why it exists
-
-The mesh-and-extender market sells hardware against a problem nobody has measured. A homeowner with a dead spot in the back bedroom is asked to guess at a product tier, buy it, and find out afterwards whether it helped. The diagnosis step is missing entirely, and it is the cheap one.
-
-An app can perform that diagnosis with hardware everyone already carries. The phone in your pocket has a radio that knows precisely how bad the signal is in the room you are standing in. All that was missing was the discipline of walking the house and writing it down — which is exactly the kind of chore software is for.
+Everyone knows which room the Wi-Fi is bad in. Almost nobody knows *why*, or what to buy to fix it. Wi-Fi Validator turns that vague complaint into a measurement: walk the house, run a quick signal test in each room, and every room earns an A–F grade with a specific fix for the weak ones. No account, no cloud — everything stays on the device. It is still in development, so this page is mostly about how it is being built.
 
 ## How it's being built
 

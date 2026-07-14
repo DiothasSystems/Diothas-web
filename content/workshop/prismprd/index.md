@@ -16,33 +16,23 @@ summary: >
 draft: false
 ---
 
-Good product ideas do not arrive at the desk during the requirements meeting. They arrive in the car, in the shower, in the middle of a conversation about something else. By the time there is a document to put them in, most of them are gone.
-
-## What it does
-
-PrismPRD turns scattered product thinking into clean, buildable specifications. You add requirements incrementally — one idea at a time, as each one hits — and the tool organizes them into a structured spec that an engineering team or an AI coding agent can act on.
-
-**Prism Clarity** is the refinement engine. It takes a requirement written the way a person actually thinks it and returns the version a developer can build against: testable acceptance criteria, edge cases surfaced, dependencies made explicit, and language that says what to do rather than what to consider.
-
-Requirements are **organized by domain**, so a spec that spans software, data, and design does not become one undifferentiated list.
-
-**Publishing goes three ways.** An Excel workbook for the people who live in spreadsheets. A formatted concept document for the ones who need prose. And a Claude Code build file, so the spec can go straight to an AI coding agent instead of being retyped into a prompt. Projects also save as re-openable JSON, with cloud version history.
-
-![PrismPRD spec view](<> "Add a screenshot of the domain-organized spec to this folder and reference it here.")
-
-## Why it exists
-
-Two failures make specifications painful, and they are opposites.
-
-The first is blank-page paralysis: the document is due, the ideas are diffuse, and staring at an empty template does not converge them. PrismPRD attacks this by refusing to demand the whole spec at once — it accepts one requirement, then another, whenever they come.
-
-The second is the spec that exists but does not build. Requirements written in the language of intent — *the system should handle errors gracefully* — read fine and construct nothing. Prism Clarity's job is to convert intent into criteria a developer or an agent can satisfy and a tester can check.
-
-> Thought to spec. Instantly.
+Good product ideas do not arrive at the desk during the requirements meeting. They arrive in the car, in the shower, mid-conversation about something else. PrismPRD catches them one at a time and turns scattered thinking into a buildable spec — its Prism Clarity engine refines each requirement into testable acceptance criteria, surfaced edge cases, and explicit dependencies, then publishes to Excel, a concept document, or a Claude Code build file. Try the beta above to see it; this page is about how it was built.
 
 ## How it was built
 
-*This section is where the engineering story goes — how Prism Clarity is prompted and evaluated, how requirements are modeled and versioned, why the export formats are what they are, and what the Claude Code integration taught you. Replace this paragraph with that account.*
+PrismPRD came from the opposite of discipline. Great products start from a well-organized set of requirements, and my own product thinking is nothing of the sort — it arrives non-linear and out of order. I wanted a service that could take a stream-of-consciousness flow of ideas, use AI to organize the chaos, and produce the right document for the right audience — Claude Code included.
+
+Idea to working beta took **about fifteen hours**.
+
+**The stack.** Development ran in Claude Cowork, then Claude Code, on Opus 4.8, against a GitHub repository. Prism Clarity — the engine that turns a rough requirement into buildable criteria — is Claude Opus 4.8. The interface was shaped with Claude's design guidance and its graphics generated in Gemini, and the requirements for PrismPRD itself were written in **ReqDoc**, the sibling tool in this same Workshop. It runs on Hostinger: a Node.js service, a Hostinger database, and Hostinger mail. Stripe handles payment processing, and Google AdSense supports the free tier.
+
+**What the build taught me.** Moving from Cowork to Claude Code — on the Opus 4.8 model — was a clear step up, and wiring in GitHub made commit-and-deploy through Claude Code quick and routine.
+
+**The roadmap.**
+
+- **v1.0** — PC and mobile web experience with an admin portal *(current beta)*
+- **v1.1** — Stripe payment processing
+- **v1.2** — a mobile-app companion with voice-input integration
 
 ## Where it stands
 

@@ -100,20 +100,24 @@ next to `index.md` and name it directly.
 Omitting `liveUrl` on a `LIVE` or `BETA` app is an error. A released app that
 links to nothing is nearly always a mistake rather than a decision.
 
-**Give every app page the same spine.** SW-014 asks these pages to cover the
-function *and the development* of the application, and SW-002 says the whole
-site exists to demonstrate technical leadership — so the build story is the
-content, not a footnote to it:
+**Lead with the work, not the pitch.** The Workshop exists to show *how the
+software was built* — the live application is where a visitor goes for the
+feature tour. So keep the product description to a single lead paragraph (what
+it is, and a nod to the live app), and let the build story carry the page:
 
 ```markdown
-## What it does
-## Why it exists
+A one-paragraph lead — what it is, then a pointer like "the live app is the
+place to see it; this page is about how it was built."
+
 ## How it was built
 ## Where it stands
 ```
 
-Four apps written to the same spine are comparable to a reader skimming all of
-them. Cut a section that has nothing to say, but start from the spine.
+This amends SW-014: the pages still cover function *and* development, but the
+function is a sentence and the development is the substance (SW-002 — the site
+demonstrates technical leadership, so the making is the content). An app with
+no live application yet (an `IN DEVELOPMENT` one) keeps a slightly fuller lead,
+since there is nowhere else to see it.
 
 ---
 
