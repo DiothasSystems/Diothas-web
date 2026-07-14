@@ -6,7 +6,7 @@ author: DIOTHAS SYSTEMS
 date: 2026-03-22
 readTime: 11
 summary: >
-  A platform team that cannot say no is not a platform team — it's a shared
+  A platform team that cannot say no is not a platform team, it's a shared
   services pool with better branding. The tax comes due either way; the only
   question is whether you priced it.
 draft: true
@@ -28,4 +28,4 @@ A platform team that cannot decline a request is not a platform team. It is a sh
 
 ## Pricing it honestly
 
-Before you build the platform, name the three teams that will use it and the specific thing each will stop doing. If you cannot, you are building infrastructure on speculation — which is sometimes right, and should be called what it is.
+Before you build the platform, name the three teams that will use it and the specific thing each will stop doing. If you cannot, you are building infrastructure on speculation, which is sometimes right, and should be called what it is.

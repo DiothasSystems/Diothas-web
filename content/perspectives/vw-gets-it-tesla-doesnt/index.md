@@ -21,7 +21,7 @@ The issue is much bigger than automotive design. It is a lesson about one of the
 
 James Utterback describes this concept brilliantly in *Mastering the Dynamics of Innovation*. Early in the life of a new product category, companies experiment aggressively. Competing ideas flood the market. Some succeed, most fail. Eventually, one approach proves to be the most effective combination of performance, usability, cost, and customer acceptance. Once that happens, the market converges around a common solution. That solution becomes the dominant design.
 
-![The Utterback model of innovation dynamics — product innovation, process innovation, and the emergence of a dominant design over time.](images/utterback-model.jpg "James Utterback’s dynamics of innovation: a flood of competing designs narrows to one dominant design, after which the contest shifts from what to build to how to build it cheaper and better.")
+![The Utterback model of innovation dynamics: product innovation, process innovation, and the emergence of a dominant design over time.](images/utterback-model.jpg "James Utterback’s dynamics of innovation: a flood of competing designs narrows to one dominant design, after which the contest shifts from what to build to how to build it cheaper and better.")
 
 After dominant design emerges, innovation changes. Companies stop asking, *"What should this product look like?"* Instead they ask, *"How do we make this version cheaper, better, faster, or more reliable?"*
 
@@ -187,4 +187,4 @@ Volkswagen appears to have recognized this.
 
 The best product managers know the difference between improving a product and changing it simply to appear innovative. The goal isn't to replace every familiar interaction. The goal is to identify where customers actually have a new problem to solve.
 
-Sometimes the most innovative thing you can do is recognize that someone else solved the problem decades ago—and spend your time solving the problems that still haven't been solved.
+Sometimes the most innovative thing you can do is recognize that someone else solved the problem decades ago, and spend your time solving the problems that still haven't been solved.

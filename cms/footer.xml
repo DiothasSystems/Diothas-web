@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- ============================================================
-     Diothas Systems CMS — FOOTER
+     Diothas Systems CMS, FOOTER
      'columns' are the link groups. Each column has a heading and a
      nested list of links. Add/remove columns or links freely.
 
@@ -10,7 +10,7 @@
 <section id="footer">
   <image key="logo" src="uploads/DiothasIcon.png" alt=""/>
   <field key="brandName">Diothas Systems</field>
-  <field key="blurb">An independent studio writing on product and technology leadership — and building the web and mobile software that puts the ideas to work.</field>
+  <field key="blurb">An independent studio writing on product and technology leadership, and building the web and mobile software that puts the ideas to work.</field>
 
   <list key="columns">
     <item>

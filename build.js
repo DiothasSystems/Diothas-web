@@ -538,7 +538,7 @@ function homePage(cms, perspectives, workshop) {
   <section class="wide section" id="writing">
     <div class="sechead">
       <div>
-        <div class="kicker">${esc(p.sectionNo)} — ${esc(p.kicker)}</div>
+        <div class="kicker">${esc(p.sectionNo)}, ${esc(p.kicker)}</div>
         <h2 class="h2">${esc(p.heading)}</h2>
       </div>
       <a class="viewall" href="/perspectives/">${esc(p.viewAll.label)}</a>
@@ -574,7 +574,7 @@ function homePage(cms, perspectives, workshop) {
     <div class="wide section">
       <div class="sechead">
         <div class="work__intro">
-          <div class="kicker">${esc(w.sectionNo)} — ${esc(w.kicker)}</div>
+          <div class="kicker">${esc(w.sectionNo)}, ${esc(w.kicker)}</div>
           <h2 class="h2">${esc(w.heading)}</h2>
           <p>${esc(w.body)}</p>
         </div>
@@ -591,7 +591,7 @@ function homePage(cms, perspectives, workshop) {
         <img class="about__emblem" src="/${esc(about.emblem.src)}" alt="${esc(about.emblem.alt)}">
       </div>
       <div>
-        <div class="kicker">${esc(about.sectionNo)} — ${esc(about.kicker)}</div>
+        <div class="kicker">${esc(about.sectionNo)}, ${esc(about.kicker)}</div>
         <h2 class="about__h2">${esc(about.heading)}</h2>
         <p class="about__p">${esc(about.body1)}</p>
         <div class="about__cta">
@@ -613,7 +613,7 @@ function homePage(cms, perspectives, workshop) {
 </div>`;
 
   return page({
-    title: `${site.brandName} — ${hero.subtitle}`,
+    title: `${site.brandName}, ${hero.subtitle}`,
     description: (hero.paragraphs && hero.paragraphs[0] && hero.paragraphs[0].text) || site.brandTagline,
     body, canonical: '/', baseUrl: site.baseUrl,
   });
@@ -669,7 +669,7 @@ ${a.body}
 </div>`;
 
   return page({
-    title: `${a.title} — ${site.brandName}`,
+    title: `${a.title}, ${site.brandName}`,
     description: a.summary,
     body, canonical: a.url, baseUrl: site.baseUrl,
   });
@@ -687,7 +687,7 @@ function appPage(cms, app) {
       : `<a class="btn-primary" href="${esc(app.liveUrl)}" target="_blank" rel="noopener">${esc(app.liveLabel)} <span>↗</span></a>`;
 
   const footCta = !app.liveUrl
-    ? `<span class="docnav__side">Not yet released — <a href="mailto:${esc(site.contactEmail)}">ask to be told when it is</a></span>`
+    ? `<span class="docnav__side">Not yet released, <a href="mailto:${esc(site.contactEmail)}">ask to be told when it is</a></span>`
     : app.isDownload
       ? `<a class="docnav__live" href="${esc(app.liveUrl)}" download="${esc(app.downloadName)}">${esc(app.liveLabel)} ↓</a>`
       : `<a class="docnav__live" href="${esc(app.liveUrl)}" target="_blank" rel="noopener">${esc(app.liveLabel)} ↗</a>`;
@@ -735,7 +735,7 @@ ${app.body}
 </div>`;
 
   return page({
-    title: `${app.name} — ${site.brandName}`,
+    title: `${app.name}, ${site.brandName}`,
     description: app.summary,
     body, canonical: app.url, baseUrl: site.baseUrl,
   });
@@ -767,7 +767,7 @@ function indexPage(cms, { heading, blurb, rows, canonical, backLabel }) {
   ${fullFooter(footer, false)}
 </div>`;
 
-  return page({ title: `${heading} — ${site.brandName}`, description: blurb, body, canonical, baseUrl: site.baseUrl });
+  return page({ title: `${heading}, ${site.brandName}`, description: blurb, body, canonical, baseUrl: site.baseUrl });
 }
 
 function perspectivesIndex(cms, items) {
@@ -827,7 +827,7 @@ function notFoundPage(cms) {
   </div>
   ${slimFooter(footer, site)}
 </div>`;
-  return page({ title: `Not found — ${site.brandName}`, description: 'Page not found.', body, canonical: '', baseUrl: site.baseUrl });
+  return page({ title: `Not found, ${site.brandName}`, description: 'Page not found.', body, canonical: '', baseUrl: site.baseUrl });
 }
 
 function sitemap(baseUrl, urls) {

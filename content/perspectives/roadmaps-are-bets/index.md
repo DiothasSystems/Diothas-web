@@ -18,7 +18,7 @@ The difference is not rhetorical. It changes what happens when the world supplie
 
 ## Commitments punish learning
 
-If the roadmap is a promise, then evidence that an item is a bad idea is bad news — it threatens the promise. The organization's incentive is to discover that evidence as late as possible. This is how teams end up shipping features they knew were wrong in week three.
+If the roadmap is a promise, then evidence that an item is a bad idea is bad news, it threatens the promise. The organization's incentive is to discover that evidence as late as possible. This is how teams end up shipping features they knew were wrong in week three.
 
 If the roadmap is a set of bets, the same evidence is a return on the cheapest thing you did all quarter. You reallocate. Nobody is embarrassed.
 

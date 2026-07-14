@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- ============================================================
-     Diothas Systems CMS — ABOUT
+     Diothas Systems CMS, ABOUT
      'emblem' is the large graphic.
      ============================================================ -->
 <section id="about">
@@ -8,5 +8,5 @@
   <field key="kicker">ABOUT</field>
   <image key="emblem" src="uploads/DiothasIcon.png" alt="Diothas Systems emblem"/>
   <field key="heading">A studio that writes about leadership, and then has to live by it.</field>
-  <field key="body1">Diothas Systems, LLC is an independent studio at the intersection of writing and building. The perspectives argue for a particular way of leading product and engineering — clear decisions, honest tradeoffs, teams shaped on purpose. The software is where those arguments earn their keep.</field>
+  <field key="body1">Diothas Systems, LLC is an independent studio at the intersection of writing and building. The perspectives argue for a particular way of leading product and engineering: clear decisions, honest tradeoffs, teams shaped on purpose. The software is where those arguments earn their keep.</field>
 </section>

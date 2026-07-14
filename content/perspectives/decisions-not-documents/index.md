@@ -30,4 +30,4 @@ The objection is always the same: writing is slower. It is slower to *produce* a
 
 ## What to do on Monday
 
-Kill one recurring meeting. Replace it with a written artifact that has an owner and an archive. Watch what happens to the questions people ask in the next one — they get sharper, because everyone arrived having already read the state.
+Kill one recurring meeting. Replace it with a written artifact that has an owner and an archive. Watch what happens to the questions people ask in the next one, they get sharper, because everyone arrived having already read the state.

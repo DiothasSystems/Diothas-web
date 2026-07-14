@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- ============================================================
-     Diothas Systems CMS — HERO (top banner + manifesto)
+     Diothas Systems CMS, HERO (top banner + manifesto)
      'backdrop' is the wide banner graphic that slowly pans.
      'paragraphs' and 'closingLines' render inside the hero itself,
-     between the subtitle and the buttons — add/remove <item> to change
+     between the subtitle and the buttons, add/remove <item> to change
      how many there are.
      ============================================================ -->
 <section id="hero">

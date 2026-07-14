@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- ============================================================
-     Diothas Systems CMS — THE WORKSHOP (secondary view: apps & services)
+     Diothas Systems CMS, THE WORKSHOP (secondary view: apps & services)
 
      This file holds the SECTION CHROME only.
 
      The application cards are NOT listed here. They come from the
-     folders in content/workshop/ — icon, name, status pill, summary
+     folders in content/workshop/, icon, name, status pill, summary
      and tags all live in each folder's index.md front matter.
 
      To add an application, add a folder. Never edit this file to add one.
@@ -14,6 +14,6 @@
   <field key="sectionNo">02</field>
   <field key="kicker">THE WORKSHOP</field>
   <field key="heading">Software shipped under one roof</field>
-  <field key="body">A small, deliberate collection of web and mobile applications and services — each one a place where the ideas in the perspectives get tested against real users.</field>
+  <field key="body">A small, deliberate collection of web and mobile applications and services, each one a place where the ideas in the perspectives get tested against real users.</field>
   <link key="viewAll" href="/workshop/">All projects →</link>
 </section>

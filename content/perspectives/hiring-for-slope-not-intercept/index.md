@@ -6,7 +6,7 @@ author: DIOTHAS SYSTEMS
 date: 2026-04-18
 readTime: 7
 summary: >
-  Interviews measure the intercept — what someone knows on the day you meet
+  Interviews measure the intercept, what someone knows on the day you meet
   them. Careers are governed by the slope. Here's how to interview for the
   derivative instead of the value.
 draft: true

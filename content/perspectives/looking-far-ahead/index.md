@@ -20,7 +20,7 @@ In this same sense of future technology and society themes, I was fortunate enou
 
 The novel describes devices such as the **Lizzio**, a wall-mounted visual display that is remarkably similar to today's flat-panel televisions, and the **Varzio**, a communication system that closely resembles modern video conferencing. These descriptions were written decades before television, computers, or the internet existed.
 
-![A Victorian scientist in a steampunk study, beside two brass-framed wall screens — one a mountain vista, one a person’s face.](images/lizzio-varzio.jpg "The novel’s Lizzio and Varzio, imagined — wall-mounted screens for distant places and faces, described decades before either existed.")
+![A Victorian scientist in a steampunk study, beside two brass-framed wall screens, one a mountain vista, one a person’s face.](images/lizzio-varzio.jpg "The novel’s Lizzio and Varzio, imagined: wall-mounted screens for distant places and faces, described decades before either existed.")
 
 Of course, the author did not predict LCD panels, fiber optics, or Zoom meetings. Instead, they imagined the human need behind the technology and the desire to communicate effortlessly across distance and to experience information visually in the home. That distinction is important. Great futurists rarely predict the engineering details correctly. They predict how people will eventually want to live.
 
@@ -28,7 +28,7 @@ That idea has always fascinated me.
 
 Throughout my career, I've been drawn to authors who look beyond gadgets and instead imagine how technology becomes part of society.
 
-Neal Stephenson's *The Diamond Age* introduced the idea of molecular engineering and "Ractors"—interactive performers who blur the line between human creativity and technology. Today, as AI-generated content and digital personalities become commonplace, those ideas feel less like science fiction and more like product roadmaps.
+Neal Stephenson's *The Diamond Age* introduced the idea of molecular engineering and "Ractors", interactive performers who blur the line between human creativity and technology. Today, as AI-generated content and digital personalities become commonplace, those ideas feel less like science fiction and more like product roadmaps.
 
 Philip K. Dick's *The Minority Report* imagined personalized advertising, biometric identification, autonomous transportation, and predictive intelligence. While Steven Spielberg's film adaptation popularized retinal scanning and self-driving transportation, the original story explored a much deeper question: how society changes when technology begins making decisions before humans do.
 
