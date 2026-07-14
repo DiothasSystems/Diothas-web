@@ -8,7 +8,7 @@
 <section id="site">
   <image key="logo" src="uploads/DiothasIcon.png" alt="Diothas Systems"/>
   <field key="brandName">Diothas Systems</field>
-  <field key="brandTagline">PRODUCT · TECHNOLOGY · LEADERSHIP</field>
+  <field key="brandTagline">PRODUCT · TECHNOLOGY · PERSPECTIVES</field>
 
   <!-- Used for canonical URLs, Open Graph tags, and sitemap.xml -->
   <field key="baseUrl">https://diothassystems.com</field>

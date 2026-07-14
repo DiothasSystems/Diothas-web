@@ -594,12 +594,8 @@ function homePage(cms, perspectives, workshop) {
         <div class="kicker">${esc(about.sectionNo)} — ${esc(about.kicker)}</div>
         <h2 class="about__h2">${esc(about.heading)}</h2>
         <p class="about__p">${esc(about.body1)}</p>
-        <p class="about__p">${esc(about.body2)}</p>
-        <div class="stats">
-          ${(about.stats || []).map((s) => `<div>
-            <div class="stat__value">${esc(s.value)}</div>
-            <div class="stat__label">${esc(s.label)}</div>
-          </div>`).join('\n          ')}
+        <div class="about__cta">
+          <a class="btn-primary" href="${esc(site.cta.href)}">${esc(site.cta.label)} <span>→</span></a>
         </div>
       </div>
     </div>

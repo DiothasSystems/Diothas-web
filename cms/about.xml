@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- ============================================================
      Diothas Systems CMS — ABOUT
-     'emblem' is the large graphic. 'stats' are the number blocks.
+     'emblem' is the large graphic.
      ============================================================ -->
 <section id="about">
   <field key="sectionNo">03</field>
@@ -9,11 +9,4 @@
   <image key="emblem" src="uploads/DiothasIcon.png" alt="Diothas Systems emblem"/>
   <field key="heading">A studio that writes about leadership, and then has to live by it.</field>
   <field key="body1">Diothas Systems, LLC is an independent studio at the intersection of writing and building. The perspectives argue for a particular way of leading product and engineering — clear decisions, honest tradeoffs, teams shaped on purpose. The software is where those arguments earn their keep.</field>
-  <field key="body2">The gears and the globe in the mark are not nostalgia. They stand for the same thing the work does: visible mechanism, careful assembly, a system you can actually reason about.</field>
-
-  <list key="stats">
-    <item><field key="value">24+</field><field key="label">PERSPECTIVES PUBLISHED</field></item>
-    <item><field key="value">4</field><field key="label">SHIPPED PRODUCTS</field></item>
-    <item><field key="value">1</field><field key="label">ROOF</field></item>
-  </list>
 </section>
