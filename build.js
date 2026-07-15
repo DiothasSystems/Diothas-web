@@ -68,7 +68,11 @@ function toDate(value, where) {
 const monthYear = (d) => `${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
 const isoDate = (d) => d.toISOString().slice(0, 10);
 
-const titleCase = (s) => String(s).toLowerCase().replace(/\b[a-z]/g, (c) => c.toUpperCase());
+// Title-case for theme chips, but keep known acronyms upper ("AI", not "Ai").
+const ACRONYMS = new Set(['AI', 'API', 'UX', 'UI', 'ML', 'LLM', 'TAM', 'PRD', 'SDK', 'HTML', 'SQL']);
+const titleCase = (s) => String(s).trim().split(/\s+/).map((w) =>
+  ACRONYMS.has(w.toUpperCase()) ? w.toUpperCase() : w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()
+).join(' ');
 
 const rmrf = (p) => fs.rmSync(p, { recursive: true, force: true, maxRetries: 5, retryDelay: 120 });
 const mkdirp = (p) => fs.mkdirSync(p, { recursive: true });
