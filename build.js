@@ -29,6 +29,18 @@ const OUT = process.env.DIST_DIR ? path.resolve(process.env.DIST_DIR) : path.joi
 
 const md = new MarkdownIt({ html: false, linkify: true, typographer: true });
 
+// External links (e.g. affiliate book links) open in a new tab. Amazon/affiliate
+// links additionally carry rel="sponsored nofollow" per search-engine guidance.
+md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
+  const href = tokens[idx].attrGet('href') || '';
+  if (/^https?:\/\//i.test(href)) {
+    tokens[idx].attrSet('target', '_blank');
+    const affiliate = /amazon\.[a-z.]+\//i.test(href) || /[?&]tag=/.test(href);
+    tokens[idx].attrSet('rel', affiliate ? 'noopener sponsored nofollow' : 'noopener noreferrer');
+  }
+  return self.renderToken(tokens, idx, options);
+};
+
 /* ------------------------------------------------------------------ *
  * errors
  * ------------------------------------------------------------------ */
