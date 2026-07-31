@@ -846,6 +846,167 @@ function notFoundPage(cms) {
   return page({ title: `Not found, ${site.brandName}`, description: 'Page not found.', body, canonical: '', baseUrl: site.baseUrl });
 }
 
+/* ---------------------------- standalone pages ---------------------------- */
+// content/pages/<slug>/index.md -> /<slug>/  — one-off pages (legal, etc.) with
+// no card and no listing. Front matter: title (required), subtitle, description.
+function readPages() {
+  const base = path.join(ROOT, 'content', 'pages');
+  if (!fs.existsSync(base)) return [];
+  const items = [];
+  for (const entry of fs.readdirSync(base, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const slug = entry.name;
+    const dir = path.join(base, slug);
+    const where = `content/pages/${slug}`;
+    if (!SLUG_RE.test(slug)) { fail(where, 'folder name must be lowercase kebab-case — it becomes the URL'); continue; }
+    const mdFile = path.join(dir, 'index.md');
+    if (!fs.existsSync(mdFile)) { fail(where, 'has no index.md'); continue; }
+    const raw = fs.readFileSync(mdFile, 'utf8');
+    const match = raw.match(FRONT_MATTER);
+    if (!match) { fail(`${where}/index.md`, 'is missing its `---` front matter block'); continue; }
+    let meta;
+    try { meta = yaml.load(match[1], { schema: yaml.CORE_SCHEMA }) || {}; }
+    catch (e) { fail(`${where}/index.md`, `front matter is not valid YAML: ${e.message}`); continue; }
+    if (meta.draft === true) continue;
+    const title = String(meta.title || '').trim();
+    if (!title) fail(where, 'front matter needs a `title`');
+    const url = meta.url
+      ? '/' + String(meta.url).trim().replace(/^\/+|\/+$/g, '') + '/'
+      : `/${slug}/`;
+    const iconFile = meta.icon ? String(meta.icon).trim() : null;
+    if (iconFile && !fs.existsSync(path.join(dir, iconFile))) {
+      fail(where, `icon "${iconFile}" is declared but not present in the folder`);
+    }
+    items.push({
+      slug, dir, url, out: url.replace(/^\/+|\/+$/g, ''), title,
+      subtitle: String(meta.subtitle || '').trim(),
+      description: String(meta.description || meta.subtitle || title).trim(),
+      theme: String(meta.theme || '').trim(),
+      iconUrl: iconFile ? `${url}${iconFile}` : null,
+      body: renderBody(raw.slice(match[0].length), `${where}/index.md`, dir),
+    });
+  }
+  return items;
+}
+
+function staticPage(cms, p) {
+  const { site, footer } = cms;
+  if (p.theme === 'tip-jar') return tipJarPage(cms, p);
+
+  const body = `<div class="shell">
+  ${nav(site, false)}
+
+  <header class="dochead">
+    <div class="dochead__inner">
+      <h1 class="doc__title">${esc(p.title)}</h1>
+      ${p.subtitle ? `<p class="doc__subtitle">${esc(p.subtitle)}</p>` : ''}
+    </div>
+  </header>
+
+  <article class="doc">
+    <div class="prose">
+${p.body}
+    </div>
+  </article>
+
+  ${slimFooter(footer, site)}
+</div>`;
+  return page({
+    title: `${p.title}, ${site.brandName}`,
+    description: p.description,
+    body, canonical: p.url, baseUrl: site.baseUrl,
+  });
+}
+
+/**
+ * A page carrying `theme: tip-jar` gets Tip Jar's own visual identity instead
+ * of the Diothas dark/brass theme — it's an app-facing legal page, not a
+ * Workshop piece, so it shouldn't look like one. Self-contained: its own
+ * <style>, no dependency on assets/site.css, no Diothas nav/footer chrome.
+ * A one-line credit links back to the main site instead.
+ */
+function tipJarPage(cms, p) {
+  const { site } = cms;
+  const style = `
+    :root {
+      --tj-top: #57c3c4; --tj-bottom: #1c6a6f; --tj-card: #fbfaf5;
+      --tj-ink: #17393c; --tj-sub: #4d6d70; --tj-hair: #e3ded0;
+      --tj-gold: #d79b1f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif;
+      background: linear-gradient(180deg, var(--tj-top) 0%, var(--tj-bottom) 100%);
+      background-attachment: fixed;
+      color: var(--tj-ink);
+    }
+    .tj-wrap { max-width: 720px; margin: 0 auto; padding: 48px 20px 64px; }
+    .tj-head { text-align: center; color: #fff; margin-bottom: 28px; }
+    .tj-icon {
+      width: 84px; height: 84px; border-radius: 20px; display: block; margin: 0 auto 18px;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.28), 0 0 0 1px rgba(255,255,255,0.15);
+    }
+    .tj-app { font-size: 15px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.92; margin: 0 0 6px; }
+    .tj-title { font-size: 32px; font-weight: 800; margin: 0 0 8px; letter-spacing: -0.3px; }
+    .tj-subtitle { font-size: 14.5px; opacity: 0.88; margin: 0; }
+    .tj-card {
+      background: var(--tj-card); border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(10,40,42,0.28);
+      padding: 40px clamp(22px, 5vw, 48px);
+    }
+    .tj-card h2 {
+      font-size: 16.5px; font-weight: 800; color: var(--tj-ink);
+      margin: 32px 0 10px; padding-top: 20px; border-top: 1px solid var(--tj-hair);
+    }
+    .tj-card h2:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+    .tj-card p { font-size: 15px; line-height: 1.7; color: var(--tj-sub); margin: 0 0 4px; }
+    .tj-card strong { color: var(--tj-ink); }
+    .tj-card a { color: var(--tj-bottom); font-weight: 600; text-decoration: none; border-bottom: 1px solid rgba(28,106,111,0.35); }
+    .tj-card a:hover { border-color: var(--tj-bottom); }
+    .tj-foot { text-align: center; margin-top: 28px; font-size: 12.5px; color: rgba(255,255,255,0.82); }
+    .tj-foot a { color: #fff; font-weight: 600; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.4); }
+    .tj-foot a:hover { border-color: #fff; }
+    @media (max-width: 480px) {
+      .tj-title { font-size: 26px; }
+      .tj-card { border-radius: 16px; padding: 28px clamp(18px,5vw,28px); }
+    }`;
+
+  const body = `<div class="tj-wrap">
+  <header class="tj-head">
+    ${p.iconUrl ? `<img class="tj-icon" src="${esc(p.iconUrl)}" alt="Tip Jar">` : ''}
+    <div class="tj-app">Tip Jar</div>
+    <h1 class="tj-title">${esc(p.title)}</h1>
+    ${p.subtitle ? `<p class="tj-subtitle">${esc(p.subtitle)}</p>` : ''}
+  </header>
+
+  <article class="tj-card">
+${p.body}
+  </article>
+
+  <div class="tj-foot">
+    Tip Jar is a mobile application by <a href="${esc(site.baseUrl)}">${esc(site.brandName)}</a>
+  </div>
+</div>`;
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${esc(p.title)}, Tip Jar</title>
+<meta name="description" content="${esc(p.description)}">
+${p.url && site.baseUrl ? `<link rel="canonical" href="${esc(site.baseUrl.replace(/\/$/, '') + p.url)}">` : ''}
+${p.iconUrl ? `<link rel="icon" href="${esc(p.iconUrl)}">` : ''}
+<style>${style}</style>
+</head>
+<body>
+${body}
+</body>
+</html>
+`;
+}
+
 function sitemap(baseUrl, urls) {
   const base = String(baseUrl || '').replace(/\/$/, '');
   const entries = urls.map(({ loc, lastmod }) =>
@@ -864,6 +1025,7 @@ function build() {
   const cms = loadCms();
   const perspectives = readItems('perspectives');
   const workshop = readItems('workshop');
+  const pages = readPages();
 
   if (problems.length) {
     console.error(`\n  Build failed — ${problems.length} problem${problems.length > 1 ? 's' : ''}:\n`);
@@ -890,6 +1052,16 @@ function build() {
     writeFile(`workshop/${app.slug}/index.html`, appPage(cms, app));
     copyItemAssets(app);
   }
+  for (const p of pages) {
+    writeFile(`${p.out}/index.html`, staticPage(cms, p));
+    for (const entry of fs.readdirSync(p.dir, { withFileTypes: true })) {
+      if (entry.name === 'index.md') continue;
+      const src = path.join(p.dir, entry.name);
+      const dst = path.join(OUT, p.out, entry.name);
+      if (entry.isDirectory()) copyDir(src, dst);
+      else { mkdirp(path.dirname(dst)); fs.copyFileSync(src, dst); }
+    }
+  }
 
   const urls = [
     { loc: '/' },
@@ -897,6 +1069,7 @@ function build() {
     { loc: '/workshop/' },
     ...perspectives.map((a) => ({ loc: a.url, lastmod: isoDate(a.date) })),
     ...workshop.map((a) => ({ loc: a.url })),
+    ...pages.map((p) => ({ loc: p.url })),
   ];
   writeFile('sitemap.xml', sitemap(cms.site.baseUrl, urls));
   writeFile('robots.txt', `User-agent: *\nAllow: /\nSitemap: ${String(cms.site.baseUrl || '').replace(/\/$/, '')}/sitemap.xml\n`);
