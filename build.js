@@ -1038,6 +1038,9 @@ function build() {
 
   copyDir(path.join(ROOT, 'uploads'), path.join(OUT, 'uploads'));
   copyDir(path.join(ROOT, 'assets'), path.join(OUT, 'assets'));
+  // Static passthrough: anything in public/ is copied verbatim to the site
+  // root (ad-network verification files, favicons, etc. — no HTML wrapper).
+  copyDir(path.join(ROOT, 'public'), OUT);
 
   writeFile('index.html', homePage(cms, perspectives, workshop));
   writeFile('404.html', notFoundPage(cms));
