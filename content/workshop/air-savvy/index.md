@@ -1,7 +1,7 @@
 ---
 name: Air Savvy
 subtitle: Airline fare price tracker. Stop guessing, start saving on flights.
-status: BETA
+status: LIVE
 tags: WEB · SERVICE
 liveUrl: https://air-savvy.com
 liveLabel: Start tracking flights
@@ -34,4 +34,4 @@ Idea to working beta took **about twenty hours**, which is the point of the Work
 
 ## Where it stands
 
-In beta. The free plan, tracking a single flight without alerts, is live today. The premium plan adds unlimited trackers, alerting, and more frequent price checks; its paid subscriptions arrive with **v1.2**, when Stripe is wired in, billed annually with a seven-day refund window.
+Live. The free plan, tracking a single flight without alerts, is live today. The premium plan adds unlimited trackers, alerting, and more frequent price checks; its paid subscriptions arrive with **v1.2**, when Stripe is wired in, billed annually with a seven-day refund window.

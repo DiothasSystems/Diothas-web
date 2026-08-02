@@ -2,7 +2,7 @@
 name: Wi-Fi Validator
 subtitle: Your whole home Wi-Fi, optimized.
 status: IN DEVELOPMENT
-tags: iOS · ANDROID
+tags: ANDROID · iOS
 icon: icon.png
 monogram: W
 variant: cyan
