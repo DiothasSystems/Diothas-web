@@ -495,8 +495,8 @@ function homePage(cms, perspectives, workshop) {
         </a>`);
 
   // Keep at least three slots filled: real perspectives first, then "forthcoming"
-  // placeholders. Once a fourth real perspective lands, the placeholders vanish
-  // and the slider arrows appear (see showPerspArrows).
+  // placeholders. With three or more real perspectives the placeholders vanish
+  // and the grid simply wraps into as many rows as the essays need.
   const placeholderCards = Array.from({ length: Math.max(0, 3 - perspectives.length) }, () => `
         <div class="pcard pcard--soon">
           <div class="pcard__panel pcard__panel--soon"><span class="pcard__diamond">◆</span></div>
@@ -509,7 +509,6 @@ function homePage(cms, perspectives, workshop) {
         </div>`);
 
   const perspCards = [...realCards, ...placeholderCards].join('');
-  const showPerspArrows = perspectives.length > 3;
 
   const cards = workshop.map((app) => `
           <a class="card" href="${esc(app.url)}">
@@ -560,11 +559,7 @@ function homePage(cms, perspectives, workshop) {
       <a class="viewall" href="/perspectives/">${esc(p.viewAll.label)}</a>
     </div>
 
-    <div class="persp-scrollwrap${showPerspArrows ? ' persp-scrollwrap--arrows' : ''}">
-      ${showPerspArrows ? `<button class="persp-arrow persp-arrow--prev" data-persp-arrow="prev" aria-label="Previous perspectives">‹</button>` : ''}
-      <div class="persp-scroller" id="perspScroller">${perspCards}
-      </div>
-      ${showPerspArrows ? `<button class="persp-arrow persp-arrow--next" data-persp-arrow="next" aria-label="More perspectives">›</button>` : ''}
+    <div class="persp-grid">${perspCards}
     </div>
 
     <div class="themes">
@@ -574,17 +569,6 @@ function homePage(cms, perspectives, workshop) {
       </div>
     </div>
   </section>
-  ${showPerspArrows ? `<script>
-(function(){
-  var s=document.getElementById('perspScroller');
-  if(!s)return;
-  var a=document.querySelectorAll('[data-persp-arrow]');
-  function pagew(){return Math.max(s.clientWidth*0.9,260);}
-  function sync(){var m=s.scrollWidth-s.clientWidth-2;a.forEach(function(b){var n=b.getAttribute('data-persp-arrow')==='next';b.disabled=n?s.scrollLeft>=m:s.scrollLeft<=2;});}
-  a.forEach(function(b){b.addEventListener('click',function(){s.scrollBy({left:(b.getAttribute('data-persp-arrow')==='next'?1:-1)*pagew(),behavior:'smooth'});});});
-  s.addEventListener('scroll',sync);window.addEventListener('resize',sync);sync();
-})();
-</script>` : ''}
 
   <section class="band" id="work">
     <div class="wide section">

@@ -180,18 +180,10 @@ img { max-width: 100%; }
 .postrow__title { font-weight: 500; font-size: 19px; line-height: 1.25; margin: 0 0 8px; color: var(--t4); }
 .postrow__read { font-size: 12px; color: var(--muted); font-family: var(--font-mono); }
 
-/* Perspectives as a horizontal snap-scroller: 3 across on desktop, 1 on mobile. */
-.persp-scroller {
-  display: flex; gap: 24px; overflow-x: auto;
-  scroll-snap-type: x mandatory; scroll-behavior: smooth;
-  padding: 6px 0 16px;
-  scrollbar-width: thin; scrollbar-color: var(--brass-dim) transparent;
-}
-.persp-scroller::-webkit-scrollbar { height: 8px; }
-.persp-scroller::-webkit-scrollbar-thumb { background: var(--brass-dim); border-radius: 4px; }
-.persp-scroller::-webkit-scrollbar-track { background: transparent; }
+/* Perspectives as a wrapping grid: 3 across on desktop, so five essays make
+   two rows; every essay after that simply adds to the grid. 1 column on mobile. */
+.persp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; padding: 6px 0 10px; }
 .pcard {
-  flex: 0 0 calc((100% - 48px) / 3); scroll-snap-align: start;
   display: flex; flex-direction: column;
   border-radius: 14px; overflow: hidden;
   background: linear-gradient(165deg, var(--card-a), var(--card-b));
@@ -212,21 +204,6 @@ img { max-width: 100%; }
 .pcard__diamond { color: var(--brass-dim); font-size: 24px; opacity: 0.55; }
 .pcard--soon .pcard__title { color: var(--s2); }
 .pcard--soon .cat, .pcard--soon .meta { color: var(--brass-dim); }
-
-/* Slider arrows — only rendered when there are more than three perspectives. */
-.persp-scrollwrap { position: relative; }
-.persp-arrow {
-  position: absolute; top: 92px; transform: translateY(-50%); z-index: 5;
-  width: 44px; height: 44px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 24px; line-height: 1; color: var(--brass);
-  background: rgba(24,36,47,0.85); border: 1px solid var(--hair-brass);
-  backdrop-filter: blur(6px); cursor: pointer; transition: background .2s, color .2s, opacity .2s;
-}
-.persp-arrow:hover { background: var(--brass); color: var(--on-brass); }
-.persp-arrow:disabled { opacity: 0.25; cursor: default; }
-.persp-arrow--prev { left: 6px; }
-.persp-arrow--next { right: 6px; }
 
 .themes { margin-top: 56px; padding-top: 34px; border-top: 1px solid rgba(201,162,90,0.14); }
 .themes__row { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -402,7 +379,7 @@ img { max-width: 100%; }
 
   .card-grid,
   .about-grid { grid-template-columns: 1fr; gap: 28px; }
-  .pcard { flex-basis: 86%; }   /* mobile: ~1 card visible, swipe for the rest */
+  .persp-grid { grid-template-columns: 1fr; }   /* mobile: one card per row */
   .about-grid { gap: 40px; }
   .about__emblem { width: 200px; height: 200px; }
 
