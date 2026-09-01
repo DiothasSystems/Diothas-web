@@ -44,3 +44,5 @@ Idea to Play Store submission took **about fifteen hours**.
 ## Where it stands
 
 The Android build is finished, signed, and verified on hardware, and is waiting on Play Store developer-account verification before it goes to internal testing. The iOS project is scaffolded and configured as far as Windows allows: bundle identifier, permissions, tracking prompt, and icons are all in place. Finishing it means adding a Mac to the toolchain, which is the next thing on the list.
+
+Using the app, or thinking about it? [Support and FAQs](/tip-jar/) answers the common questions and has the contact address.

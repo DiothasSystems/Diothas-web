@@ -14,7 +14,7 @@ asked most. If yours is not here, email us — a real person reads it.
 
 ## Contact us
 
-**[admin@diothassystems.com](mailto:admin@diothassystems.com)**
+**[tipjar@diothassystems.com](mailto:tipjar@diothassystems.com)**
 
 To get a useful answer on the first reply, please include:
 
@@ -120,7 +120,7 @@ another Diothas Systems app rather than sitting empty.
 
 ### The app crashed, or a number looks wrong
 
-Please email **[admin@diothassystems.com](mailto:admin@diothassystems.com)** with
+Please email **[tipjar@diothassystems.com](mailto:tipjar@diothassystems.com)** with
 the details listed at the top of this page. If a tipping figure looks wrong for a
 country you know well, say so and tell us what you would expect — corrections
 from people on the ground are genuinely useful, and the dataset gets updated.
