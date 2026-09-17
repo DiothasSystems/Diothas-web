@@ -1,8 +1,10 @@
 ---
 name: Tip Jar
 subtitle: Know what to tip, anywhere in the world.
-status: IN DEVELOPMENT
+status: LIVE
 tags: ANDROID · iOS
+liveUrl: https://play.google.com/store/apps/details?id=com.diothassystems.tipjar
+liveLabel: Get it on Google Play
 icon: icon.png
 monogram: T
 variant: cyan
@@ -37,12 +39,16 @@ Idea to Play Store submission took **about fifteen hours**.
 
 **The roadmap.**
 
-- **v1.0**, Android release: 73 countries, 14 service types, bill splitting, live currency conversion *(submitted)*
-- **v1.1**, iOS release *(project scaffolded; needs a Mac to build and sign)*
-- **v1.2**, an agent that watches store reviews and feedback and turns it into the next set of features
+- **v1.0**, Android release: 73 countries, 14 service types, bill splitting, live currency conversion *(live on Google Play)*
+- **v1.1**, iOS release *(live on the App Store)*
+- **v1.2**, an agent that watches store reviews and feedback and turns it into the next set of features *(next)*
 
 ## Where it stands
 
-The Android build is finished, signed, and verified on hardware, and is waiting on Play Store developer-account verification before it goes to internal testing. The iOS project is scaffolded and configured as far as Windows allows: bundle identifier, permissions, tracking prompt, and icons are all in place. Finishing it means adding a Mac to the toolchain, which is the next thing on the list.
+Both versions are out. Tip Jar is [live on Google Play](https://play.google.com/store/apps/details?id=com.diothassystems.tipjar) and [live on the App Store](https://apps.apple.com/us/app/tip-jar-global-tip-calculator/id6807392583).
+
+Getting iOS over the line meant adding a Mac to the toolchain, exactly as expected — everything else had been prepared from Windows, so the bundle identifier, permissions, tracking prompt, and icons were already in place and the remaining work was building, signing, and submitting. The two platforms now carry independent version numbers, which is normal once each store has its own release history to respect.
+
+Next is v1.2: an agent that reads what people write in the stores and turns it into the next set of changes. There is a certain symmetry to shipping an app built with agents and then pointing an agent at its reviews.
 
 Using the app, or thinking about it? [Support and FAQs](/tip-jar/) answers the common questions and has the contact address.
