@@ -1,20 +1,20 @@
 ---
 title: "Terms & Privacy"
-subtitle: "Tip Jar, by Diothas Systems, LLC · Version 1.0"
-description: Terms of use and privacy policy for the Tip Jar mobile application by Diothas Systems, LLC.
-url: /tip-jar/terms/
+subtitle: "Tip Smart, by Diothas Systems, LLC · Version 1.0"
+description: Terms of use and privacy policy for the Tip Smart mobile application by Diothas Systems, LLC.
+url: /tip-smart/terms/
 theme: tip-jar
-icon: tipjar-icon.png
+icon: tipsmart-icon.png
 draft: false
 ---
 
 ## 1. License
 
-Diothas Systems, LLC ("we," "us") grants you a personal, non-transferable, non-exclusive license to use Tip Jar ("the App") on devices you own or control, for your personal, non-commercial use.
+Diothas Systems, LLC ("we," "us") grants you a personal, non-transferable, non-exclusive license to use Tip Smart ("the App") on devices you own or control, for your personal, non-commercial use.
 
 ## 2. Informational Purpose Only
 
-Tip Jar provides general tipping guidance based on a reference dataset of country and service-category norms. Tipping customs vary by city, venue, and individual circumstance, and may change over time. The App's suggestions are estimates only, are not professional, financial, or legal advice, and are not a substitute for your own judgment. You are solely responsible for any amount you choose to tip.
+Tip Smart provides general tipping guidance based on a reference dataset of country and service-category norms. Tipping customs vary by city, venue, and individual circumstance, and may change over time. The App's suggestions are estimates only, are not professional, financial, or legal advice, and are not a substitute for your own judgment. You are solely responsible for any amount you choose to tip.
 
 ## 3. No Warranty
 

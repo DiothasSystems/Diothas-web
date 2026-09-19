@@ -1,14 +1,14 @@
 ---
-title: "Tip Jar Support"
+title: "Tip Smart Support"
 subtitle: "Help, common questions, and how to reach us"
-description: Support and frequently asked questions for the Tip Jar mobile application by Diothas Systems, LLC.
-url: /tip-jar/
+description: Support and frequently asked questions for the Tip Smart mobile application by Diothas Systems, LLC.
+url: /tip-smart/
 theme: tip-jar
-icon: tipjar-icon.png
+icon: tipsmart-icon.png
 draft: false
 ---
 
-Tip Jar tells you what to tip, in the country you are standing in. If something
+Tip Smart tells you what to tip, in the country you are standing in. If something
 is not working the way you expect, the answers below cover the questions we are
 asked most. If yours is not here, email us — a real person reads it.
 
@@ -18,13 +18,13 @@ asked most. If yours is not here, email us — a real person reads it.
 
 To get a useful answer on the first reply, please include:
 
-- Your **app version** — open **Settings** (the gear icon) and read the line at the very bottom, e.g. `Tip Jar · v1.1.2 (6)`
+- Your **app version** — open **Settings** (the gear icon) and read the line at the very bottom, e.g. `Tip Smart · v1.2.0 (7)`
 - Your **device and OS version**, e.g. "Pixel 8 Pro, Android 16"
 - The **country and service** you had selected when the problem happened
 
 ## Using the app
 
-### Tip Jar has the wrong country
+### Tip Smart has the wrong country
 
 Tap the location box at the top left and choose the right country from the
 list. Your choice sticks until you change it or ask for a fresh GPS reading.
@@ -34,14 +34,14 @@ If you would rather it detect your location again, open the same box and tap
 
 ### Why does it say a city I am not in?
 
-When Tip Jar cannot get a GPS fix, it falls back to a representative city for
+When Tip Smart cannot get a GPS fix, it falls back to a representative city for
 your selected country and labels the reading **manual** rather than **GPS**. It
 is telling you it is guessing from the country, not from your position. Tapping
 **Use my location instead** will try again.
 
-### Does Tip Jar track or store my location?
+### Does Tip Smart track or store my location?
 
-No. Tip Jar has no account and keeps no history of where you have been.
+No. Tip Smart has no account and keeps no history of where you have been.
 
 When you allow location access, your coordinates are sent once to a third-party
 reverse-geocoding service (BigDataCloud) purely to turn them into a country
@@ -49,12 +49,12 @@ name. We do not receive, store, or retain your location, and it is not used for
 anything else. You can decline location access entirely and pick your country by
 hand — every feature still works.
 
-The full detail is in the [Terms & Privacy](/tip-jar/terms/) page.
+The full detail is in the [Terms & Privacy](/tip-smart/terms/) page.
 
 ### Why does the flashlight need camera permission?
 
 On both Android and iOS the torch is part of the camera hardware, so the system
-requires camera permission to switch it on. Tip Jar never opens the camera, and
+requires camera permission to switch it on. Tip Smart never opens the camera, and
 takes no photos or video. If you would rather not grant it, decline — the rest
 of the app is unaffected.
 
@@ -100,12 +100,12 @@ currency of the bill.
 ### Does the app work without a data connection?
 
 Yes, and it is designed to. All tipping guidance is built into the app. With no
-connection you pick your country by hand and Tip Jar uses the last exchange
+connection you pick your country by hand and Tip Smart uses the last exchange
 rates it downloaded, telling you in Settings how old they are.
 
 ## Ads and cost
 
-### Is Tip Jar free?
+### Is Tip Smart free?
 
 Yes, entirely free, and supported by a single banner ad at the bottom of the
 screen. There is no paid tier, no subscription, and no in-app purchase, so there

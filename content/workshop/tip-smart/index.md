@@ -1,5 +1,5 @@
 ---
-name: Tip Jar
+name: Tip Smart
 subtitle: Know what to tip, anywhere in the world.
 status: LIVE
 tags: ANDROID · iOS
@@ -16,7 +16,7 @@ summary: >
 draft: false
 ---
 
-Standing at a table in an unfamiliar country, the question is rarely "what is twenty percent of this?" It is "is twenty percent even the right thing to do here?" Most tip calculators answer the first question and ignore the second. Tip Jar answers both: enter the bill, pick the service, and get the amount along with the local custom behind it, including the cases where tipping is not expected at all or a service charge is already sitting on the bill. It covers 73 countries across 14 service types, splits the bill across the table, and never asks for an account. This page is about how it was built.
+Standing at a table in an unfamiliar country, the question is rarely "what is twenty percent of this?" It is "is twenty percent even the right thing to do here?" Most tip calculators answer the first question and ignore the second. Tip Smart answers both: enter the bill, pick the service, and get the amount along with the local custom behind it, including the cases where tipping is not expected at all or a service charge is already sitting on the bill. It covers 73 countries across 14 service types, splits the bill across the table, and never asks for an account. This page is about how it was built.
 
 ## How it was built
 
@@ -45,10 +45,10 @@ Idea to Play Store submission took **about fifteen hours**.
 
 ## Where it stands
 
-Both versions are out. Tip Jar is [live on Google Play](https://play.google.com/store/apps/details?id=com.diothassystems.tipjar) and [live on the App Store](https://apps.apple.com/us/app/tip-jar-global-tip-calculator/id6807392583).
+Both versions are out. Tip Smart is [live on Google Play](https://play.google.com/store/apps/details?id=com.diothassystems.tipjar) and [live on the App Store](https://apps.apple.com/us/app/tip-jar-global-tip-calculator/id6807392583).
 
 Getting iOS over the line meant adding a Mac to the toolchain, exactly as expected — everything else had been prepared from Windows, so the bundle identifier, permissions, tracking prompt, and icons were already in place and the remaining work was building, signing, and submitting. The two platforms now carry independent version numbers, which is normal once each store has its own release history to respect.
 
 Next is v1.2: an agent that reads what people write in the stores and turns it into the next set of changes. There is a certain symmetry to shipping an app built with agents and then pointing an agent at its reviews.
 
-Using the app, or thinking about it? [Support and FAQs](/tip-jar/) answers the common questions and has the contact address.
+Using the app, or thinking about it? [Support and FAQs](/tip-smart/) answers the common questions and has the contact address.

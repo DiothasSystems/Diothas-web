@@ -903,7 +903,7 @@ ${p.body}
 }
 
 /**
- * A page carrying `theme: tip-jar` gets Tip Jar's own visual identity instead
+ * A page carrying `theme: tip-jar` gets the app's own visual identity instead
  * of the Diothas dark/brass theme — it's an app-facing legal page, not a
  * Workshop piece, so it shouldn't look like one. Self-contained: its own
  * <style>, no dependency on assets/site.css, no Diothas nav/footer chrome.
@@ -958,8 +958,8 @@ function tipJarPage(cms, p) {
 
   const body = `<div class="tj-wrap">
   <header class="tj-head">
-    ${p.iconUrl ? `<img class="tj-icon" src="${esc(p.iconUrl)}" alt="Tip Jar">` : ''}
-    <div class="tj-app">Tip Jar</div>
+    ${p.iconUrl ? `<img class="tj-icon" src="${esc(p.iconUrl)}" alt="Tip Smart">` : ''}
+    <div class="tj-app">Tip Smart</div>
     <h1 class="tj-title">${esc(p.title)}</h1>
     ${p.subtitle ? `<p class="tj-subtitle">${esc(p.subtitle)}</p>` : ''}
   </header>
@@ -969,7 +969,7 @@ ${p.body}
   </article>
 
   <div class="tj-foot">
-    Tip Jar is a mobile application by <a href="${esc(site.baseUrl)}">${esc(site.brandName)}</a>
+    Tip Smart is a mobile application by <a href="${esc(site.baseUrl)}">${esc(site.brandName)}</a>
   </div>
 </div>`;
 
@@ -978,7 +978,7 @@ ${p.body}
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${esc(p.title)}, Tip Jar</title>
+<title>${esc(p.title)}, Tip Smart</title>
 <meta name="description" content="${esc(p.description)}">
 ${p.url && site.baseUrl ? `<link rel="canonical" href="${esc(site.baseUrl.replace(/\/$/, '') + p.url)}">` : ''}
 ${p.iconUrl ? `<link rel="icon" href="${esc(p.iconUrl)}">` : ''}
