@@ -54,4 +54,4 @@ This Agreement is governed by the laws of the State of Georgia, USA, without reg
 
 ## 12. Contact
 
-Questions about this Agreement can be directed to Diothas Systems, LLC at [tipjar@diothassystems.com](mailto:tipjar@diothassystems.com).
+Questions about this Agreement can be directed to Diothas Systems, LLC at [tipsmart@diothassystems.com](mailto:tipsmart@diothassystems.com).
