@@ -12,6 +12,12 @@ concurrency:
   group: deploy-${{ github.ref }}
   cancel-in-progress: true
 
+# contents: read is what checkout needs; issues: write lets the failure step
+# below open an issue with the built-in token — no extra secrets involved.
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -63,3 +69,22 @@ jobs:
           # Incremental. The action keeps a manifest on the server and uploads
           # only what changed. Never enable dangerous-clean-slate here.
           dangerous-clean-slate: false
+
+      # A red run is easy to miss; an open issue is not. Twice now a transient
+      # FTPS timeout left the live site serving stale content for days before
+      # anyone noticed. Opening an issue also makes GitHub send its own email
+      # notification. PR failures are skipped — those are already visible on
+      # the pull request itself.
+      - name: Open an issue on failure
+        if: failure() && github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create \
+            --repo "${{ github.repository }}" \
+            --title "Deploy failed: ${GITHUB_SHA:0:7} did not reach the live site" \
+            --body "The deploy run for \`${GITHUB_SHA:0:7}\` failed, so diothassystems.com is still serving the previous version.
+
+          Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          If the log shows an FTPS timeout or ENOTFOUND, it is usually transient — open the run above and click **Re-run all jobs**. Close this issue once a deploy for this commit (or a later one) succeeds."
