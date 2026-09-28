@@ -875,7 +875,8 @@ function readPages() {
 
 function staticPage(cms, p) {
   const { site, footer } = cms;
-  if (p.theme === 'tip-jar') return tipJarPage(cms, p);
+  if (APP_THEMES[p.theme]) return themedPage(cms, p, APP_THEMES[p.theme]);
+  if (p.theme) fail(`content/pages/${p.slug}`, `unknown theme "${p.theme}" — use one of: ${Object.keys(APP_THEMES).join(', ')}`);
 
   const body = `<div class="shell">
   ${nav(site, false)}
@@ -903,24 +904,51 @@ ${p.body}
 }
 
 /**
- * A page carrying `theme: tip-jar` gets the app's own visual identity instead
- * of the Diothas dark/brass theme — it's an app-facing legal page, not a
- * Workshop piece, so it shouldn't look like one. Self-contained: its own
+ * App themes, keyed by the `theme` front-matter value. The key `tip-jar`
+ * predates the rename to Tip Smart and is kept so existing pages still match.
+ * `root` is the page's colour variables; the rest are the few values the
+ * shared template can't express through them.
+ */
+const APP_THEMES = {
+  'tip-jar': {
+    name: 'Tip Smart',
+    root: `--tj-top: #57c3c4; --tj-bottom: #1c6a6f; --tj-card: #fbfaf5;
+      --tj-ink: #17393c; --tj-sub: #4d6d70; --tj-hair: #e3ded0;
+      --tj-gold: #d79b1f;`,
+    font: '-apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif',
+    shadow: 'rgba(10,40,42,0.28)',
+    link: 'var(--tj-bottom)',
+    linkRule: 'rgba(28,106,111,0.35)',
+  },
+  // AisleFox brand tokens (AisleFox repo, brand/tokens.json).
+  aislefox: {
+    name: 'AisleFox',
+    root: `--tj-top: #256B35; --tj-bottom: #1E3A24; --tj-card: #FFFFFF;
+      --tj-ink: #1E3A24; --tj-sub: #4A5E4F; --tj-hair: #E6E0D2;`,
+    font: 'Nunito, -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif',
+    shadow: 'rgba(10,30,15,0.30)',
+    link: '#256B35',
+    linkRule: 'rgba(37,107,53,0.35)',
+  },
+};
+
+/**
+ * A page carrying an app `theme` gets that app's own visual identity instead
+ * of the Diothas dark/brass theme — it's an app-facing support or legal page,
+ * not a Workshop piece, so it shouldn't look like one. Self-contained: its own
  * <style>, no dependency on assets/site.css, no Diothas nav/footer chrome.
  * A one-line credit links back to the main site instead.
  */
-function tipJarPage(cms, p) {
+function themedPage(cms, p, theme) {
   const { site } = cms;
   const style = `
     :root {
-      --tj-top: #57c3c4; --tj-bottom: #1c6a6f; --tj-card: #fbfaf5;
-      --tj-ink: #17393c; --tj-sub: #4d6d70; --tj-hair: #e3ded0;
-      --tj-gold: #d79b1f;
+      ${theme.root}
     }
     * { box-sizing: border-box; }
     body {
       margin: 0; min-height: 100vh;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif;
+      font-family: ${theme.font};
       background: linear-gradient(180deg, var(--tj-top) 0%, var(--tj-bottom) 100%);
       background-attachment: fixed;
       color: var(--tj-ink);
@@ -936,7 +964,7 @@ function tipJarPage(cms, p) {
     .tj-subtitle { font-size: 14.5px; opacity: 0.88; margin: 0; }
     .tj-card {
       background: var(--tj-card); border-radius: 20px;
-      box-shadow: 0 20px 50px rgba(10,40,42,0.28);
+      box-shadow: 0 20px 50px ${theme.shadow};
       padding: 40px clamp(22px, 5vw, 48px);
     }
     .tj-card h2 {
@@ -946,8 +974,8 @@ function tipJarPage(cms, p) {
     .tj-card h2:first-child { margin-top: 0; padding-top: 0; border-top: none; }
     .tj-card p { font-size: 15px; line-height: 1.7; color: var(--tj-sub); margin: 0 0 4px; }
     .tj-card strong { color: var(--tj-ink); }
-    .tj-card a { color: var(--tj-bottom); font-weight: 600; text-decoration: none; border-bottom: 1px solid rgba(28,106,111,0.35); }
-    .tj-card a:hover { border-color: var(--tj-bottom); }
+    .tj-card a { color: ${theme.link}; font-weight: 600; text-decoration: none; border-bottom: 1px solid ${theme.linkRule}; }
+    .tj-card a:hover { border-color: ${theme.link}; }
     .tj-foot { text-align: center; margin-top: 28px; font-size: 12.5px; color: rgba(255,255,255,0.82); }
     .tj-foot a { color: #fff; font-weight: 600; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.4); }
     .tj-foot a:hover { border-color: #fff; }
@@ -958,8 +986,8 @@ function tipJarPage(cms, p) {
 
   const body = `<div class="tj-wrap">
   <header class="tj-head">
-    ${p.iconUrl ? `<img class="tj-icon" src="${esc(p.iconUrl)}" alt="Tip Smart">` : ''}
-    <div class="tj-app">Tip Smart</div>
+    ${p.iconUrl ? `<img class="tj-icon" src="${esc(p.iconUrl)}" alt="${esc(theme.name)}">` : ''}
+    <div class="tj-app">${esc(theme.name)}</div>
     <h1 class="tj-title">${esc(p.title)}</h1>
     ${p.subtitle ? `<p class="tj-subtitle">${esc(p.subtitle)}</p>` : ''}
   </header>
@@ -969,7 +997,7 @@ ${p.body}
   </article>
 
   <div class="tj-foot">
-    Tip Smart is a mobile application by <a href="${esc(site.baseUrl)}">${esc(site.brandName)}</a>
+    ${esc(theme.name)} is a mobile application by <a href="${esc(site.baseUrl)}">${esc(site.brandName)}</a>
   </div>
 </div>`;
 
@@ -978,7 +1006,7 @@ ${p.body}
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${esc(p.title)}, Tip Smart</title>
+<title>${esc(p.title)}, ${esc(theme.name)}</title>
 <meta name="description" content="${esc(p.description)}">
 ${p.url && site.baseUrl ? `<link rel="canonical" href="${esc(site.baseUrl.replace(/\/$/, '') + p.url)}">` : ''}
 ${p.iconUrl ? `<link rel="icon" href="${esc(p.iconUrl)}">` : ''}
