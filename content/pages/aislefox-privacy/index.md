@@ -91,6 +91,6 @@ the app. Features like that will be optional.
 ## Contact us
 
 Questions about this policy or about AisleFox:
-**[aislefox@diothassystems.com](mailto:aislefox@diothassystems.com)**
+**[support@diothassystems.com](mailto:support@diothassystems.com)**
 
 Diothas Systems, LLC · Johns Creek, Georgia, USA
