@@ -1,7 +1,7 @@
 ---
 name: Curricle
 subtitle: One shared itinerary for the whole family.
-status: BETA
+status: LIVE
 tags: ANDROID · iOS · WEB
 liveUrl: https://app.curricle.app
 liveLabel: Open the web app
@@ -64,10 +64,10 @@ The local prototype came together quickly. Getting it through the stores took ab
 
 **The roadmap.**
 
-- **v1.0**, Android release on Google Play
+- **v1.0**, Android release on Google Play *(live)*
 - **v1.0**, iOS release on the App Store
 - **v1.1**, turning the feedback inbox into the next set of changes
 
 ## Where it stands
 
-The web app is live at [app.curricle.app](https://app.curricle.app). The Android release is with Google Play, and the iOS build is being prepared for TestFlight and the App Store.
+The web app is live at [app.curricle.app](https://app.curricle.app), and the Android app is live on Google Play. The iOS build is being prepared for TestFlight and the App Store.
