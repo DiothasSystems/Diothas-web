@@ -3,7 +3,7 @@ name: Tip Smart
 subtitle: Know what to tip, anywhere in the world.
 status: LIVE
 tags: ANDROID · iOS
-liveUrl: https://play.google.com/store/apps/details?id=com.diothassystems.tipjar
+liveUrl: https://play.google.com/store/apps/details?id=com.diothassystems.tipsmart
 liveLabel: Get it on Google Play
 icon: icon.png
 monogram: T
@@ -16,38 +16,38 @@ summary: >
 draft: false
 ---
 
-Standing at a table in an unfamiliar country, the question is rarely "what is twenty percent of this?" It is "is twenty percent even the right thing to do here?" Most tip calculators answer the first question and ignore the second. Tip Smart answers both: enter the bill, pick the service, and get the amount along with the local custom behind it, including the cases where tipping is not expected at all or a service charge is already sitting on the bill. It covers 73 countries across 14 service types, splits the bill across the table, and never asks for an account. This page is about how it was built.
+Standing at a table in an unfamiliar country, the question is rarely "what is twenty percent of this?" It is "is twenty percent even the right thing to do here?" Most tip calculators answer the first and ignore the second. Tip Smart answers both: enter the bill, pick the service, and get the amount along with the local custom behind it, including the cases where tipping is not expected at all or a service charge is already sitting on the bill. It covers 73 countries across 14 service types, splits the bill across the table, and never asks for an account. This page is about how it was built, and about the rebrand nobody plans for.
 
 ## How it was built
 
-I wanted a small consumer app with genuine everyday value, and the strongest version of that idea pointed at international travel. It began narrowly: work out the tip on a restaurant bill. Splitting the check and rounding to a clean total followed almost immediately, because that is what actually happens at the table. Then the scope opened up on its own. If the app knows restaurants, it should know taxis and hotel porters and tour guides. And if it knows those, the interesting problem is not the arithmetic at all but the etiquette, which changes completely the moment you cross a border. That last step, from calculator to tipping guide, is where the product became worth building.
+It began narrowly: work out the tip on a restaurant bill. Splitting the check and rounding to a clean total followed almost immediately, because that is what happens at a table. Then the scope opened on its own. If the app knows restaurants, it should know taxis and hotel porters and tour guides — and once it knows those, the interesting problem is not the arithmetic at all but the etiquette, which changes completely the moment you cross a border. That step, from calculator to tipping guide, is where it became worth building.
 
-Two constraints held the whole way. Keep it simple, and store nothing about the user. There is no account, no history, and no bill data kept after you close the app.
+Idea to a working app took **about fifteen hours**. Everything after that — store listings, data-safety declarations, review cycles, an ad network, and an unplanned rebrand — took **roughly twice as long again**. That ratio is the most useful thing this project taught me, and nothing in the build warned me it was coming.
 
-Idea to Play Store submission took **about fifteen hours**.
+**The stack.** Requirements were written in **PrismPRD**, the sibling tool in this Workshop. The interface was designed in Claude Design, and the tipping research ran in Claude Cowork against published tourism-board and travel-publisher sources. The app is Flutter, built in Claude Code. Live exchange rates come from a free public API with a bundled offline fallback, and Google AdMob supplies the banner. There is no backend at all.
 
-**The stack.** Requirements were written in **PrismPRD**, the sibling tool in this Workshop. The interface was designed and iterated in Claude Design, and the international tipping research ran in Claude Cowork against published tourism-board and travel-publisher sources. The app itself is Flutter, built in Claude Code, starting on Sonnet and moving to Opus 5 for the store-preparation work and final passes. Live exchange rates come from a free public API with a bundled offline fallback, and Google AdMob supplies the banner that offsets development cost. There is no backend at all.
+## The rename
 
-**What the build taught me.**
+It launched as Tip Jar. Weeks later, Apple relayed a trademark claim on behalf of a company holding registered marks on that name in the UK, the US, Canada and via Madrid, publishing a cashless-tipping product of its own. The phrase was plainly descriptive to me and distinctly theirs to them, which is exactly the collision a clearance search exists to catch. I had not run one.
 
-- **Start with an HTML demo.** The whole interface was prototyped as a single standalone HTML file first, which made the UX arguments cheap to have and cheap to lose. Reworking a layout took minutes instead of a rebuild cycle. By the time a line of Flutter was written, the design was settled.
-- **Then build native anyway.** The obvious shortcut is to wrap that HTML and ship it. I went native instead, and it was the right call: real GPS, the camera flash as a flashlight, and the ad SDK all wanted native access, and the result feels like an app rather than a page.
-- **Prototype scaffolding has to be hunted down before submission.** The demo left convincing fakes behind: a purchase button that took no payment, an ad slot filled with invented restaurant names, and terms of use that still described themselves as a draft. All three were plausible enough to survive months of testing and all three would have been a problem in review.
-- **Some decisions are permanent, so make them on purpose.** An Android package name cannot be changed after the first release; a different one is simply a different app. Mine was still the scaffold default hours before submission. The signing key is the same kind of decision in reverse: lose it and you can never update the listing again.
-- **Static data that looks live is worse than no data.** The location bar displayed a hardcoded city next to a "GPS" label, so it confidently told a user in Georgia they were in Texas. The tip was always right; the label was not. The same trap caught the bundled exchange rates, one of which had drifted 93% from the real value.
-- **Build outside cloud-synced folders.** Days went into a build failure that turned out to be OneDrive holding files open mid-sync. Moving the project to a plain local path fixed it immediately.
+A rename alone would have satisfied the claim. I withdrew the app from both stores instead and relaunched it as Tip Smart, because an Android package name is permanent: `com.diothassystems.tipjar` would have sat in the Play Store URL for the life of the listing. A clean identity meant a new package, new listings, and an install count back at zero. With a few dozen users that was cheap. A year later it would not have been.
+
+**What it taught me.**
+
+- **Clear the name before you build the icon.** The wordmark was in the app icon, the splash, the store graphics and the cross-promo banners. Changing a name touches far more than a string.
+- **Store operations are the project, not the paperwork after it.** Signing keys, package identifiers, data-safety declarations, content ratings, ad-network verification — each is small, none is optional, and together they outweighed the build.
+- **Some decisions are permanent, so make them deliberately.** A package name cannot be changed after release. Neither, in practice, can a signing key be replaced casually.
+- **Static data that looks live is worse than no data.** A hardcoded city beside a "GPS" label confidently told a user in Georgia they were in Texas. The tip was right; the label was not.
 
 **The roadmap.**
 
 - **v1.0**, Android release: 73 countries, 14 service types, bill splitting, live currency conversion *(live on Google Play)*
-- **v1.1**, iOS release *(live on the App Store)*
-- **v1.2**, an agent that watches store reviews and feedback and turns it into the next set of features *(next)*
+- **v1.1**, iOS release *(prepared; needs a Mac to build and sign)*
+- **v1.2**, an agent that watches store reviews and turns them into the next set of features
 
 ## Where it stands
 
-Both versions are out. Tip Smart is [live on Google Play](https://play.google.com/store/apps/details?id=com.diothassystems.tipjar) and [live on the App Store](https://apps.apple.com/us/app/tip-jar-global-tip-calculator/id6807392583).
-
-Getting iOS over the line meant adding a Mac to the toolchain, exactly as expected — everything else had been prepared from Windows, so the bundle identifier, permissions, tracking prompt, and icons were already in place and the remaining work was building, signing, and submitting. The two platforms now carry independent version numbers, which is normal once each store has its own release history to respect.
+Android is live on Google Play under the new name. The iOS project is prepared as far as Windows allows — bundle identifier, icons, permissions, tracking prompt and ad configuration are all in place — and the remaining work is building, signing and submitting on a Mac.
 
 Next is v1.2: an agent that reads what people write in the stores and turns it into the next set of changes. There is a certain symmetry to shipping an app built with agents and then pointing an agent at its reviews.
 
