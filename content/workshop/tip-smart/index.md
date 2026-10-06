@@ -18,6 +18,8 @@ draft: false
 
 Standing at a table in an unfamiliar country, the question is rarely "what is twenty percent of this?" It is "is twenty percent even the right thing to do here?" Most tip calculators answer the first and ignore the second. Tip Smart answers both: enter the bill, pick the service, and get the amount along with the local custom behind it, including the cases where tipping is not expected at all or a service charge is already sitting on the bill. It covers 73 countries across 14 service types, splits the bill across the table, and never asks for an account. This page is about how it was built, and about the rebrand nobody plans for.
 
+![A brass and iron tipping machine parked on a wet cobbled street, its display reading Bill $86.50, Tip $17.30, Total $103.80, with fifteen, eighteen and twenty percent keys beneath a Tip Smart banner.](tip-smart-contraption.webp "Not what the app looks like — what it is trying to feel like. The sum already settled, the local custom already known.")
+
 ## How it was built
 
 It began narrowly: work out the tip on a restaurant bill. Splitting the check and rounding to a clean total followed almost immediately, because that is what happens at a table. Then the scope opened on its own. If the app knows restaurants, it should know taxis and hotel porters and tour guides — and once it knows those, the interesting problem is not the arithmetic at all but the etiquette, which changes completely the moment you cross a border. That step, from calculator to tipping guide, is where it became worth building.
