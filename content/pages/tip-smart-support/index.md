@@ -51,6 +51,34 @@ hand — every feature still works.
 
 The full detail is in the [Terms & Privacy](/tip-smart/terms/) page.
 
+### How do I delete my data?
+
+Uninstall the app. That removes everything it has stored, because everything it
+stores is on your device — your settings and the fact that you accepted the
+terms. Bill amounts and splits are gone the moment you close the app; they are
+never written down anywhere.
+
+There is nothing to delete on our side. Tip Smart has no accounts and no server
+that holds anything about you, so there is no record of you for us to erase. If
+you would like that confirmed in writing, email
+**[tipsmart@diothassystems.com](mailto:tipsmart@diothassystems.com)** and we will
+reply within 30 days.
+
+Ad data is the one exception, and it is not ours: Google holds it under its own
+policy. You can reset or delete your advertising identifier on **iOS** under
+Settings → Privacy & Security → Tracking, and on **Android** under Settings →
+Privacy → Ads.
+
+### Can I turn off the permissions later?
+
+Yes, any of them, at any time, and the app keeps working.
+
+Revoke location and the app asks you to pick your country from a list instead.
+Revoke camera and you lose the flashlight and nothing else. On iOS, if you said
+yes to the tracking prompt and would rather not have, turn it off under Settings
+→ Privacy & Security → Tracking — the ads carry on, they just stop being
+personalised.
+
 ### Why does the flashlight need camera permission?
 
 On both Android and iOS the torch is part of the camera hardware, so the system
