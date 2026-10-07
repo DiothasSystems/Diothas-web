@@ -102,7 +102,7 @@ This Agreement is governed by the laws of the State of Georgia, USA, without reg
 
 ## 16. Contact
 
-Questions, complaints or claims about the App or this Agreement can be directed to Diothas Systems, LLC at [tipsmart@diothassystems.com](mailto:tipsmart@diothassystems.com), or by post to [POSTAL ADDRESS — SET BEFORE RELEASE].
+Questions, complaints or claims about the App or this Agreement can be directed to Diothas Systems, LLC at [tipsmart@diothassystems.com](mailto:tipsmart@diothassystems.com), or by post to 450 Millhaven Way, Alpharetta, GA 30005, USA.
 
 ## 17. Additional Terms for Apps Obtained from the Apple App Store
 
