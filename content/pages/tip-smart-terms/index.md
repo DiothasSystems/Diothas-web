@@ -48,7 +48,7 @@ Handled on your device only:
 
 Three outside services receive a request from the App:
 
-- **BigDataCloud** receives your approximate coordinates, and only if you grant location permission — see Section 8.
+- **BigDataCloud** receives your device's coordinates, and only if you grant location permission — see Section 8.
 - **Google AdMob** serves the banner advertisement and may collect your device's advertising identifier and information about ad interactions — see Section 9.
 - **open.er-api.com** supplies daily reference exchange rates. This request asks for a published rate table and carries no information about you, your location, or your bill.
 
@@ -56,7 +56,7 @@ We share data with these providers only on the basis that they afford it protect
 
 ## 8. Location Services
 
-If you grant permission, the App uses your device's location solely to suggest your current country for tipping guidance. To turn coordinates into a country name, the App sends those coordinates to a third-party reverse-geocoding service (BigDataCloud), which is subject to its own privacy practices. We do not receive, store, or retain your location, and it is not used for any other purpose. The App does not track your movements and keeps no history of where you have been. You may decline location access and select your country manually at any time, and you may withdraw permission later as described in Section 11 — every feature still works.
+If you grant permission, the App uses your device's location solely to suggest your current country for tipping guidance. To turn coordinates into a country name, the App sends those coordinates to a third-party reverse-geocoding service (BigDataCloud), which is subject to its own privacy practices. Only a country name comes back, and the App needs nothing finer, so on iOS you may grant approximate location rather than precise and everything still works. We do not receive, store, or retain your location, and it is not used for any other purpose. The App does not track your movements and keeps no history of where you have been. You may decline location access and select your country manually at any time, and you may withdraw permission later as described in Section 11 — every feature still works.
 
 ## 9. Advertising and Your Advertising Identifier
 
