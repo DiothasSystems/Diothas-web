@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- ============================================================
      Diothas Systems CMS, HERO (top banner + manifesto)
-     'backdrop' is the wide banner graphic that slowly pans.
+     The banner is four stacked layers that pan at different speeds
+     for a parallax effect: 'layerBack' (sky), 'layerMid' (city),
+     'layerCraft' (balloons and airships, the fastest mover), and
+     'layerFront' (automaton face). All but the sky have transparency.
      'paragraphs' and 'closingLines' render inside the hero itself,
      between the subtitle and the buttons, add/remove <item> to change
      how many there are.
@@ -14,7 +17,10 @@
   <link key="primaryCta" href="#writing">Read the Perspectives</link>
   <link key="secondaryCta" href="#work">See the workshop</link>
 
-  <image key="backdrop" src="uploads/DiothasBanner.jpg" alt="Steampunk cityscape banner"/>
+  <image key="layerBack" src="uploads/hero-layer-back.jpg" alt="Steampunk sky with airships"/>
+  <image key="layerMid" src="uploads/hero-layer-mid.webp" alt="Steampunk cityscape"/>
+  <image key="layerCraft" src="uploads/hero-layer-craft.webp" alt="Balloons and airships"/>
+  <image key="layerFront" src="uploads/hero-layer-front.webp" alt="Brass automaton face"/>
 
   <list key="paragraphs">
     <item><field key="text">Diothas Systems is a collection of perspectives on product leadership, artificial intelligence, and the technologies shaping tomorrow.</field></item>

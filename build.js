@@ -530,7 +530,10 @@ function homePage(cms, perspectives, workshop) {
   ${nav(site, true)}
 
   <section class="hero" id="top">
-    <div class="hero__bg" style="background-image:url('/${esc(hero.backdrop.src)}')"></div>
+    <div class="hero__bg hero__bg--back" style="background-image:url('/${esc(hero.layerBack.src)}')"></div>
+    <div class="hero__bg hero__bg--mid" style="background-image:url('/${esc(hero.layerMid.src)}')"></div>
+    <div class="hero__bg hero__bg--craft" style="background-image:url('/${esc(hero.layerCraft.src)}')"></div>
+    <div class="hero__bg hero__bg--front" style="background-image:url('/${esc(hero.layerFront.src)}')"></div>
     <div class="hero__scrim-a"></div>
     <div class="hero__scrim-b"></div>
     <div class="wide hero__inner">
