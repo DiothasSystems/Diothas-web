@@ -39,18 +39,21 @@ A rename alone would have satisfied the claim. I withdrew the app from both stor
 - **Clear the name before you build the icon.** The wordmark was in the app icon, the splash, the store graphics and the cross-promo banners. Changing a name touches far more than a string.
 - **Store operations are the project, not the paperwork after it.** Signing keys, package identifiers, data-safety declarations, content ratings, ad-network verification — each is small, none is optional, and together they outweighed the build.
 - **Some decisions are permanent, so make them deliberately.** A package name cannot be changed after release. Neither, in practice, can a signing key be replaced casually.
+- **A screen that explains a permission must not impersonate the one that asks for it.** Borrowing the system dialog's wording, and offering a way around it, is what got the iOS build rejected. Explain, then get out of the way.
 - **Static data that looks live is worse than no data.** A hardcoded city beside a "GPS" label confidently told a user in Georgia they were in Texas. The tip was right; the label was not.
 
 **The roadmap.**
 
 - **v1.0**, Android release: 73 countries, 14 service types, bill splitting, live currency conversion *(live on Google Play)*
-- **v1.1**, iOS release *(prepared; needs a Mac to build and sign)*
-- **v1.2**, an agent that watches store reviews and turns them into the next set of features
+- **v1.0.2**, iOS release *(live on the App Store, 21 October 2026)*
+- **next**, an agent that watches store reviews and turns them into the next set of features
 
 ## Where it stands
 
-Android is live on Google Play under the new name. The iOS project is prepared as far as Windows allows — bundle identifier, icons, permissions, tracking prompt and ad configuration are all in place — and the remaining work is building, signing and submitting on a Mac.
+Both platforms are live under the new name: [Google Play](https://play.google.com/store/apps/details?id=com.diothassystems.tipsmart) and the [App Store](https://apps.apple.com/us/app/tipsmart-like-a-local/id6819130086). iOS landed on 21 October 2026, built and signed on a Mac mini working from the same Git repository as the Windows machine — which, after months of carrying code between the two on a USB stick, was the single change that made the second platform tractable.
 
-Next is v1.2: an agent that reads what people write in the stores and turns it into the next set of changes. There is a certain symmetry to shipping an app built with agents and then pointing an agent at its reviews.
+It did not go through first time. Apple rejected the build under guideline 5.1.1(iv), and the reason is worth repeating because it is so easy to walk into. The app shows its own screen before asking for location, explaining why it wants it. Good practice. But the button on that screen read **Allow Location Access**, and beside it sat a link to skip the whole thing. Apple reads a pre-permission screen that mimics the system dialog's wording, and offers an exit from it, as steering the answer rather than explaining the question. The button now says **Continue** and the escape hatch is gone on iOS — declining the real prompt still drops you straight into the country picker, so nothing was lost but the nudge.
+
+Next is the review-watching agent: something that reads what people write in the stores and turns it into the next set of changes. There is a certain symmetry to shipping an app built with agents and then pointing an agent at its reviews.
 
 Using the app, or thinking about it? [Support and FAQs](/tip-smart/) answers the common questions and has the contact address.

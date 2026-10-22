@@ -19,7 +19,7 @@ asked most. If yours is not here, email us — a real person reads it.
 To get a useful answer on the first reply, please include:
 
 - Your **app version** — open **Settings** (the gear icon) and read the line at the very bottom, e.g. `Tip Smart · v1.2.0 (7)`
-- Your **device and OS version**, e.g. "Pixel 8 Pro, Android 16"
+- Your **device and OS version**, e.g. "Pixel 8 Pro, Android 16" or "iPhone 15, iOS 18"
 - The **country and service** you had selected when the problem happened
 
 ## Using the app
