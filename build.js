@@ -356,6 +356,22 @@ function readItems(kind) {
         item.isDownload = true;
         item.liveLabel = item.liveLabel || 'Download';
       }
+
+      // An app on two stores gets a second button beside the first.
+      // Hosted links only; the primary liveUrl must exist for it to sit beside.
+      const live2 = String(meta.liveUrl2 || '').trim();
+      item.liveUrl2 = '';
+      item.liveLabel2 = String(meta.liveLabel2 || '').trim();
+      if (live2) {
+        if (!/^https?:\/\//.test(live2)) {
+          fail(where, `liveUrl2 "${live2}" must be an absolute http(s) URL`);
+        }
+        if (!item.liveUrl) {
+          fail(where, 'liveUrl2 needs a primary liveUrl to sit beside');
+        }
+        item.liveUrl2 = live2;
+        item.liveLabel2 = item.liveLabel2 || 'Launch application';
+      }
     }
 
     items.push(item);
@@ -689,6 +705,9 @@ function appPage(cms, app) {
       ? `<a class="btn-primary" href="${esc(app.liveUrl)}" download="${esc(app.downloadName)}">${esc(app.liveLabel)} <span>↓</span></a>`
       : `<a class="btn-primary" href="${esc(app.liveUrl)}" target="_blank" rel="noopener">${esc(app.liveLabel)} <span>↗</span></a>`;
 
+  const secondCta = !app.liveUrl2 ? ''
+    : `<a class="btn-primary" href="${esc(app.liveUrl2)}" target="_blank" rel="noopener">${esc(app.liveLabel2)} <span>↗</span></a>`;
+
   const footCta = !app.liveUrl
     ? `<span class="docnav__side">Not yet released, <a href="mailto:${esc(site.contactEmail)}">ask to be told when it is</a></span>`
     : app.isDownload
@@ -712,6 +731,7 @@ function appPage(cms, app) {
           <div class="apphead__tags">${esc(app.tags)}</div>
           <div class="apphead__ctas">
             ${primaryCta}
+            ${secondCta}
             <a class="btn-ghost" href="${esc(site.cta.href)}">${esc(site.cta.label)}</a>
           </div>
         </div>

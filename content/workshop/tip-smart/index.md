@@ -5,6 +5,8 @@ status: LIVE
 tags: ANDROID · iOS
 liveUrl: https://play.google.com/store/apps/details?id=com.diothassystems.tipsmart
 liveLabel: Get it on Google Play
+liveUrl2: https://apps.apple.com/us/app/tipsmart-like-a-local/id6819130086
+liveLabel2: Get it on the App Store
 icon: icon.png
 monogram: T
 variant: cyan
