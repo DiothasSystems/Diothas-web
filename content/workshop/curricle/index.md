@@ -65,9 +65,9 @@ The local prototype came together quickly. Getting it through the stores took ab
 **The roadmap.**
 
 - **v1.0**, Android release on Google Play *(live)*
-- **v1.0**, iOS release on the App Store
+- **v1.0**, iOS release on the App Store *(live)*
 - **v1.1**, turning the feedback inbox into the next set of changes
 
 ## Where it stands
 
-The web app is live at [app.curricle.app](https://app.curricle.app), and the Android app is live on Google Play. The iOS build is being prepared for TestFlight and the App Store.
+Curricle is live everywhere it was headed: the web app at [app.curricle.app](https://app.curricle.app), the Android app on [Google Play](https://play.google.com/store/apps/details?id=com.diothassystems.curricle), and the iOS app on the [App Store](https://apps.apple.com/us/app/curricle-shared-trip-plans/id6819078362). One codebase, three platforms, exactly as the stack intended.
