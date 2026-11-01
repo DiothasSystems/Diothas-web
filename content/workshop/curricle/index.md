@@ -5,6 +5,10 @@ status: LIVE
 tags: ANDROID · iOS · WEB
 liveUrl: https://app.curricle.app
 liveLabel: Open the web app
+liveUrl2: https://play.google.com/store/apps/details?id=com.diothassystems.curricle
+liveLabel2: Get it on Google Play
+liveUrl3: https://apps.apple.com/us/app/curricle-shared-trip-plans/id6819078362
+liveLabel3: Get it on the App Store
 icon: icon.png
 monogram: C
 variant: cyan
