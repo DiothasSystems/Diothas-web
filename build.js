@@ -709,11 +709,17 @@ function appPage(cms, app) {
   const storeCtas = [2, 3].map((n) => !app['liveUrl' + n] ? ''
     : `<a class="btn-primary" href="${esc(app['liveUrl' + n])}" target="_blank" rel="noopener">${esc(app['liveLabel' + n])} <span>↗</span></a>`).join('\n            ');
 
-  const footCta = !app.liveUrl
-    ? `<span class="docnav__side">Not yet released, <a href="mailto:${esc(site.contactEmail)}">ask to be told when it is</a></span>`
-    : app.isDownload
+  const footLinks = !app.liveUrl ? [] : [
+    app.isDownload
       ? `<a class="docnav__live" href="${esc(app.liveUrl)}" download="${esc(app.downloadName)}">${esc(app.liveLabel)} ↓</a>`
-      : `<a class="docnav__live" href="${esc(app.liveUrl)}" target="_blank" rel="noopener">${esc(app.liveLabel)} ↗</a>`;
+      : `<a class="docnav__live" href="${esc(app.liveUrl)}" target="_blank" rel="noopener">${esc(app.liveLabel)} ↗</a>`,
+    ...[2, 3].filter((n) => app['liveUrl' + n]).map((n) =>
+      `<a class="docnav__live" href="${esc(app['liveUrl' + n])}" target="_blank" rel="noopener">${esc(app['liveLabel' + n])} ↗</a>`),
+  ];
+  const footCta = !footLinks.length
+    ? `<span class="docnav__side">Not yet released, <a href="mailto:${esc(site.contactEmail)}">ask to be told when it is</a></span>`
+    : footLinks.length === 1 ? footLinks[0]
+      : `<div class="docnav__btns">${footLinks.join('\n        ')}</div>`;
 
   const body = `<div class="shell">
   ${nav(site, false)}
