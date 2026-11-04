@@ -47,12 +47,12 @@ A rename alone would have satisfied the claim. I withdrew the app from both stor
 **The roadmap.**
 
 - **v1.0**, Android release: 73 countries, 14 service types, bill splitting, live currency conversion *(live on Google Play)*
-- **v1.0.2**, iOS release *(live on the App Store, 21 October 2026)*
+- **v1.0.2**, iOS release *(live on the App Store)*
 - **next**, an agent that watches store reviews and turns them into the next set of features
 
 ## Where it stands
 
-Both platforms are live under the new name: [Google Play](https://play.google.com/store/apps/details?id=com.diothassystems.tipsmart) and the [App Store](https://apps.apple.com/us/app/tipsmart-like-a-local/id6819130086). iOS landed on 21 October 2026, built and signed on a Mac mini working from the same Git repository as the Windows machine — which, after months of carrying code between the two on a USB stick, was the single change that made the second platform tractable.
+Both platforms are live under the new name: [Google Play](https://play.google.com/store/apps/details?id=com.diothassystems.tipsmart) and the [App Store](https://apps.apple.com/us/app/tipsmart-like-a-local/id6819130086). iOS landed second, built and signed on a Mac mini working from the same Git repository as the Windows machine. After months of carrying code between the two on a USB stick, that shared repository was the single change that made the second platform tractable.
 
 It did not go through first time. Apple rejected the build under guideline 5.1.1(iv), and the reason is worth repeating because it is so easy to walk into. The app shows its own screen before asking for location, explaining why it wants it. Good practice. But the button on that screen read **Allow Location Access**, and beside it sat a link to skip the whole thing. Apple reads a pre-permission screen that mimics the system dialog's wording, and offers an exit from it, as steering the answer rather than explaining the question. The button now says **Continue** and the escape hatch is gone on iOS — declining the real prompt still drops you straight into the country picker, so nothing was lost but the nudge.
 

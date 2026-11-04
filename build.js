@@ -53,9 +53,6 @@ const fail = (where, msg) => problems.push(`${where}\n    ${msg}`);
 const ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ESCAPES[c]);
 
-const MONTHS = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
-  'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
-
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 /**
@@ -77,7 +74,6 @@ function toDate(value, where) {
   }
   return d;
 }
-const monthYear = (d) => `${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
 const isoDate = (d) => d.toISOString().slice(0, 10);
 
 // Title-case for theme chips, but keep known acronyms upper ("AI", not "Ai").
@@ -506,7 +502,7 @@ function homePage(cms, perspectives, workshop) {
             <h3 class="pcard__title">${esc(a.title)}</h3>
             <p class="pcard__excerpt">${esc(a.summary)}</p>
             <div class="meta">
-              <span>${a.readTime} MIN READ</span><span class="meta__dot">·</span><span>${monthYear(a.date)}</span>
+              <span>${a.readTime} MIN READ</span>
             </div>
           </div>
         </a>`);
@@ -614,6 +610,7 @@ function homePage(cms, perspectives, workshop) {
         <div class="kicker">${esc(about.sectionNo)}, ${esc(about.kicker)}</div>
         <h2 class="about__h2">${esc(about.heading)}</h2>
         <p class="about__p">${esc(about.body1)}</p>
+        ${about.established ? `<div class="about__est">${esc(about.established)}</div>` : ''}
         <div class="about__cta">
           <a class="btn-primary" href="${esc(site.cta.href)}">${esc(site.cta.label)} <span>→</span></a>
         </div>
@@ -658,7 +655,7 @@ function articlePage(cms, a) {
         <div style="padding-top:4px">
           <div class="arthead__cat">${esc(a.category)}</div>
           <div class="arthead__meta">
-            <span>${esc(monthYear(a.date))}</span><span class="meta__dot">·</span><span>${a.readTime} MIN READ</span><span class="meta__dot">·</span><span>${esc(author)}</span>
+            <span>${a.readTime} MIN READ</span><span class="meta__dot">·</span><span>${esc(author)}</span>
           </div>
         </div>
       </div>
@@ -808,7 +805,7 @@ function perspectivesIndex(cms, items) {
           <div class="postrow__cat">${esc(a.category)}</div>
           <h2 class="indexrow__title">${esc(a.title)}</h2>
           <p class="indexrow__excerpt">${esc(a.summary)}</p>
-          <div class="meta"><span>${a.readTime} MIN READ</span><span class="meta__dot">·</span><span>${esc(monthYear(a.date))}</span></div>
+          <div class="meta"><span>${a.readTime} MIN READ</span></div>
         </div>
       </a>`).join('');
 
